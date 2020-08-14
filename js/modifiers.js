@@ -15,7 +15,7 @@ function always_one_spell(entity) {
 function may_discard_first_drawn_adventure_card(entity) {
   entity.drawFn = entity.drawCard.bind(entity);
   entity.drawCard = (extra = 0) => {
-    const amount = extra + entity.state.cardDraw;
+    const amount = entity.state.cardDraw + extra;
     for (var i = 1; i < amount + 1; i++) {
       // Draw card:
       console.log(`${entity.state.name} has drawn ${i}/${amount} card(s)`);

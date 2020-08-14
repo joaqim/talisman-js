@@ -4,12 +4,25 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
-    devserver: { server: {}, options: { port: SERVER_PORT } },
+    devserver: { server: {}, options: { port: SERVER_PORT, base: "." } },
     watch: {
       js: {
-        files: ["js/*.js", "index.html", "css/*.css"],
+        files: [
+          "json/**.json",
+          "js/*.js",
+          "index.html",
+          "css/*.css",
+          "assets/**",
+        ],
         options: { livereload: true },
         tasks: ["depend-concat"],
+      },
+    },
+    json: {
+      main: {
+        options: { namespace: "talisman" },
+        src: ["json/talisman_board.json"],
+        dest: "build/compiled_json.js",
       },
     },
     // Combines dependency .js to one .js file
@@ -24,7 +37,7 @@ module.exports = function (grunt) {
             tag: "depends",
           },
         },
-        src: ["js/*.js"],
+        src: ["build/compiled_json.js", "js/**.js"],
         dest: "build/<%= pkg.name %>.js",
       },
     },
@@ -32,17 +45,25 @@ module.exports = function (grunt) {
     terser: {
       your_target: {
         src: ["build/<%= pkg.name %>.js"],
-        dest: "dist/<%= pkg.name %>.min.js",
+        dest: "dist/js/<%= pkg.name %>.min.js",
       },
     },
     copy: {
-      css: {
+      css_assets: {
         expand: true,
-        src: ["css/**"],
+        src: ["css/**", "assets/**"],
+        dest: "dist/",
+      },
+      public: {
+        expand: true,
+        src: ["public/*"],
+        flatten: true,
         dest: "dist/",
       },
     },
-    processhtml: { dist: { files: { "dist/index.html": ["index.html"] } } },
+    processhtml: {
+      dist: { files: { "dist/index.html": ["index.html"] } },
+    },
     "gh-pages": {
       options: {
         base: "dist",
@@ -55,6 +76,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-devserver");
   grunt.loadNpmTasks("grunt-contrib-watch");
 
+  grunt.loadNpmTasks("grunt-json");
   grunt.loadNpmTasks("grunt-terser");
   grunt.loadNpmTasks("grunt-depend-concat");
 
@@ -63,6 +85,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-gh-pages");
 
   grunt.registerTask("dist", [
+    "json",
     "depend-concat",
     "terser",
     "processhtml",

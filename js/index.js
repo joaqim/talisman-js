@@ -2,6 +2,12 @@
 // @depends ./character.js;
 // @depends ./spells.js;
 // @depends ./modifiers.js
+// @depends ./logic-grid.js
+
+window.onload = function () {
+  var context = document.getElementById("demo").getContext("2d");
+  Game.run(context);
+};
 
 class Prophetess extends Character {
   constructor() {

@@ -1,0 +1,256 @@
+{
+  "cols": 7,
+  "rows": 7,
+
+  "1": {
+    "name": "city",
+    "neighbours": [2, 24],
+    "conditional": { "use_raft": [25] },
+    "center": { "x": 410, "y": 270 }
+  },
+  "2": {
+    "name": "fields",
+    "neighbours": [1, 3],
+    "conditional": { "use_raft": [25, 26] },
+    "center": { "x": 1000, "y": 270 }
+  },
+  "3": {
+    "name": "hills",
+    "neighbours": [2, 4],
+    "conditional": { "use_raft": [26, 27] },
+    "center": { "x": 1650, "y": 270 }
+  },
+  "4": {
+    "name": "plains",
+    "neighbours": [3, 5],
+    "conditional": { "use_raft": [27] },
+    "center": { "x": 2300, "y": 270 }
+  },
+  "5": {
+    "name": "woods",
+    "neighbours": [4, 6],
+    "conditional": { "use_raft": [27, 28] },
+    "center": { "x": 2930, "y": 270 }
+  },
+  "6": {
+    "name": "plains",
+    "neighbours": [5, 7],
+    "conditional": { "use_raft": [28, 29] },
+    "center": { "x": 3580, "y": 270 }
+  },
+  "7": {
+    "name": "tavern",
+    "neighbours": [6, 8],
+    "conditional": { "use_raft": [29] },
+    "center": { "x": 4275, "y": 285 }
+  },
+
+  "8": {
+    "name": "fields",
+    "neighbours": [7, 9],
+    "conditional": { "use_raft": [29] },
+    "center": { "x": 4275, "y": 660 }
+  },
+  "9": {
+    "name": "runes",
+    "neighbours": [8, 10],
+    "conditional": { "use_raft": [29, 30, 31] },
+    "center": { "x": 4275, "y": 1170 }
+  },
+  "10": {
+    "name": "plains",
+    "neighbours": [9, 11],
+    "conditional": { "use_raft": [31, 32] },
+    "center": { "x": 4275, "y": 1640 }
+  },
+  "11": {
+    "name": "forest",
+    "neighbours": [10, 12],
+    "conditional": { "use_raft": [32, 33] },
+    "center": { "x": 4275, "y": 1980 }
+  },
+  "12": {
+    "name": "fields",
+    "neighbours": [11, 13],
+    "conditional": { "use_raft": [33] },
+    "center": { "x": 4275, "y": 2350 }
+  },
+  "13": {
+    "name": "village",
+    "neighbours": [12, 14],
+    "conditional": { "use_raft": [33] },
+    "center": { "x": 4200, "y": 2750 }
+  },
+  "14": {
+    "name": "fields",
+    "neighbours": [13, 15],
+    "conditional": { "use_raft": [33, 34] },
+    "center": { "x": 3575, "y": 2760 }
+  },
+  "15": {
+    "name": "graveyard",
+    "neighbours": [14, 16],
+    "conditional": { "use_raft": [34, 35] },
+    "center": { "x": 2925, "y": 2760 }
+  },
+  "16": {
+    "name": "woods",
+    "neighbours": [15, 17],
+    "conditional": { "use_raft": [35] },
+    "center": { "x": 2255, "y": 2760 }
+  },
+  "17": {
+    "name": "sentinel",
+    "neighbours": [16, 18],
+    "conditional": {
+      "defeat_sentinel": 36,
+      "use_raft": [36, 35]
+    },
+    "center": { "x": 1650, "y": 2760 }
+  },
+  "18": {
+    "name": "hills",
+    "neighbours": [17, 19],
+    "conditional": { "use_raft": [36, 37] },
+    "center": { "x": 1000, "y": 2760 }
+  },
+  "19": {
+    "name": "chapel",
+    "neighbours": [18, 20],
+    "conditional": { "use_raft": [37] },
+    "center": { "x": 405, "y": 2740 }
+  },
+
+  "20": {
+    "name": "fields",
+    "neighbours": [19, 21],
+    "conditional": { "use_raft": [37] },
+    "center": { "x": 310, "y": 2355 }
+  },
+  "21": {
+    "name": "crags",
+    "neighbours": [20, 22],
+    "conditional": { "use_raft": [37, 38] },
+    "center": { "x": 310, "y": 1940 }
+  },
+  "22": {
+    "name": "plains",
+    "neighbours": [21, 23],
+    "conditional": { "use_raft": [39, 40] },
+    "center": { "x": 310, "y": 1535 }
+  },
+  "23": {
+    "name": "woods",
+    "neighbours": [22, 24],
+    "conditional": { "use_raft": [40, 25] },
+    "center": { "x": 310, "y": 1110 }
+  },
+  "24": {
+    "name": "fields",
+    "neighbours": [23, 1],
+    "conditional": { "use_raft": [25] },
+    "center": { "x": 310, "y": 700 }
+  },
+
+  "25": {
+    "name": "warlock's cave",
+    "neighbours": [26, 40],
+    "conditional": { "use_raft": [1, 2, 24] }
+  },
+  "26": {
+    "name": "desert",
+    "neighbours": [25, 26],
+    "conditional": { "use_raft": [2, 3] }
+  },
+  "27": {
+    "name": "oasis",
+    "neighbours": [26, 28],
+    "conditional": { "use_raft": [3, 4, 5] }
+  },
+  "28": {
+    "name": "desert",
+    "neighbours": [27, 29],
+    "conditional": { "use_raft": [5, 6] }
+  },
+  "29": {
+    "name": "temple",
+    "neighbours": [28, 30],
+    "conditional": { "use_raft": [6, 7, 8, 9] }
+  },
+
+  "30": {
+    "name": "woods",
+    "neighbours": [29, 31],
+    "conditional": { "use_raft": [9] }
+  },
+  "31": {
+    "name": "runes",
+    "neighbours": [30, 32],
+    "conditional": { "use_raft": [9, 10] }
+  },
+  "32": {
+    "name": "castle",
+    "neighbours": [31, 33],
+    "conditional": { "use_raft": [10, 11] }
+  },
+
+  "33": {
+    "name": "portal_of_power",
+    "neighbours": [32, 34],
+    "conditional": { "portal_of_power": [48], "use_raft": [12, 13, 14] }
+  },
+  "34": {
+    "name": "black_knight",
+    "neighbours": [33, 35],
+    "conditional": { "use_raft": [14, 15] }
+  },
+  "35": {
+    "name": "hidden_valley",
+    "neighbours": [34, 36],
+    "conditional": { "use_raft": [15, 16, 17] }
+  },
+  "36": {
+    "name": "hills",
+    "neighbours": [35, 37],
+    "conditional": {
+      "use_raft": [17, 18]
+    }
+  },
+  "37": {
+    "name": "cursed_glade",
+    "neighbours": [36, 38],
+    "conditional": { "use_raft": [18, 19, 20] }
+  },
+
+  "38": {
+    "name": "runes",
+    "neighbours": [37, 39],
+    "conditional": { "use_raft": [21] }
+  },
+  "39": {
+    "name": "chasm",
+    "neighbours": [38, 40],
+    "conditional": { "use_raft": [22] }
+  },
+  "40": {
+    "name": "runes",
+    "neighbours": [39, 25],
+    "conditional": { "use_raft": [22, 23] }
+  },
+
+  "41": { "name": "plain_of_peril", "neighbours": [33, 45, 46] },
+  "42": { "name": "mines", "neighbours": [41, 43] },
+  "43": { "name": "vampire's tower", "neighbours": [42, 44] },
+  "44": {
+    "name": "pits",
+    "neighbours": [43],
+    "conditional": { "has_talisman": [48] }
+  },
+  "45": { "name": "crypt", "neighbours": [41, 46] },
+
+  "46": { "name": "dice_with_death", "neighbours": [45, 47] },
+  "47": { "name": "werewolf_den", "neighbours": [46, 48] },
+
+  "48": { "name": "valley of fire", "neighbours": [44, 47, 49] },
+  "49": { "name": "crown_of_command", "neighbours": [48] }
+}
