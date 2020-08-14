@@ -1,0 +1,22 @@
+{
+  "name": "talisman-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.2.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-depend-concat": "^0.1.4",
+    "grunt-devserver": "^0.6.0",
+    "grunt-terser": "^1.0.0"
+  },
+  "dependencies": {
+    "assert": "^2.0.0",
+    "bootstrap": "^4.5.2"
+  }
+}
