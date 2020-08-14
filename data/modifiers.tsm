@@ -1,0 +1,45 @@
+always_one_spell = {
+  scope = owner
+  potential = {
+    OR = {
+      on_start_of_first_turn
+      on_spell_count_changed
+    }
+  }
+  trigger = {
+    has_spell_count = 0
+    has_max_spells = false
+    NOT = { has_max_spells }
+    check_variable = { which = "spell_count" value = 0 }
+  }
+  effect = {
+    draw_spell
+  }
+}
+
+use_raft = {
+  scope = owner
+
+  potential = {
+    on_start_of_turn
+  }
+
+  allow = {
+    get_current_tile = {
+      tile_scope = {
+        limit = {
+          check_variable = {
+            which = raft_tiles
+            value > 0
+          }
+        }
+      }
+    }
+  }
+  effect = {
+    set_variable = {
+      which = possible_tiles
+      value = TILE = { raft_tiles }
+    }
+  }
+}

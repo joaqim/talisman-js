@@ -4,24 +4,31 @@ module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON("package.json"),
-    devserver: { server: {}, options: { port: SERVER_PORT, base: "." } },
+    devserver: {
+      server: {},
+      options: {
+        port: SERVER_PORT,
+        base: ".",
+      },
+      tasks: ["build"],
+    },
     watch: {
       js: {
         files: [
-          "json/**.json",
-          "js/*.js",
+          "json/**/*.json",
+          "js/**/*.js",
           "index.html",
-          "css/*.css",
+          "css/**/*.css",
           "assets/**",
         ],
         options: { livereload: true },
-        tasks: ["depend-concat"],
+        tasks: ["build"],
       },
     },
     json: {
       main: {
         options: { namespace: "talisman" },
-        src: ["json/talisman_board.json"],
+        src: ["json/*.json"],
         dest: "build/compiled_json.js",
       },
     },
@@ -37,7 +44,14 @@ module.exports = function (grunt) {
             tag: "depends",
           },
         },
-        src: ["build/compiled_json.js", "js/**.js"],
+        src: [
+          "build/compiled_json.js",
+          "js/modifiers/**.js",
+          "js/characters/**.js",
+          "js/followers/**.js",
+          "js/items/**.js",
+          "js/**/*.js",
+        ],
         dest: "build/<%= pkg.name %>.js",
       },
     },
@@ -84,13 +98,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-processhtml");
   grunt.loadNpmTasks("grunt-gh-pages");
 
-  grunt.registerTask("dist", [
-    "json",
-    "depend-concat",
-    "terser",
-    "processhtml",
-    "copy",
-  ]);
+  grunt.registerTask("build", ["json", "depend-concat"]);
+  grunt.registerTask("dist", ["build", "terser", "processhtml", "copy"]);
 
   grunt.registerTask("github", ["dist", "gh-pages"]);
 };

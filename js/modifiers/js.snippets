@@ -1,0 +1,9 @@
+
+snippet mod
+function $1(entity) {
+	let $2Fn = entity.$2.bind(entity);
+	entity.$2 = (owner) => {
+		return $2Fn(owner);
+	}
+};
+endsnippet
