@@ -3,25 +3,23 @@
 // @depends ./spells.js;
 // @depends ./modifiers.js
 // @depends ./logic-grid.js
+// @depends ./characters/prophetess.js
+// @depdens ./game.js
 
 window.onload = function () {
   var context = document.getElementById("demo").getContext("2d");
-  Game.run(context);
+  var game = new Game();
+  game.run(context);
 };
-
-class Prophetess extends Character {
-  constructor() {
-    super("Prophetess", 2, 4, 4, 2, "good");
-    always_one_spell(this);
-    may_discard_first_drawn_adventure_card(this);
-  }
-}
 
 var p = new Prophetess();
 p.update();
 
+var spell_book = new Entity("spell_book", "magical_item");
+always_one_spell(spell_book);
+
 var crystal_ball = new Entity("crystal_ball", "magical_item");
-always_one_spell(crystal_ball);
+may_discard_first_drawn_adventure_card(crystal_ball);
 
 var mule = new Entity("mule", "follower");
 carry_limit_increase(mule, 4);
@@ -37,6 +35,10 @@ required_alignment_to_use_NOT(rune_sword, "good");
 
 p.useSpell("Random");
 p.update();
+if (!p.useSpell("Random")) console.log("can't cast another spell this turn");
+p.endTurn();
+p.update();
+p.startTurn();
 p.addItem(holy_grail);
 
 p.addItem(rune_sword);
@@ -44,7 +46,7 @@ p.useItem(rune_sword);
 
 p.addItem(crystal_ball);
 p.update();
-p.addItem(mule);
+//p.addItem(mule);
 //p.removeItem(mule);
 //p.addItem(horse_and_carts);
 //p.removeItem(horse_and_carts);

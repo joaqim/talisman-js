@@ -1,5 +1,13 @@
 class Character {
-  constructor(name, strength, craft, lives, fate, alignment = "neutral") {
+  constructor(
+    name,
+    strength,
+    craft,
+    lives,
+    fate,
+    alignment = "neutral",
+    items = []
+  ) {
     this.state = {
       name: name,
       type: "character",
@@ -16,20 +24,56 @@ class Character {
       fateMax: fate,
 
       spells: [],
-      items: [],
+      items: items,
       followers: [],
 
       carryLimit: 4,
       cardDraw: 1,
 
-      curCard: null,
-      cardsDrawn: [],
+      curTurn: {
+        cards: [],
+        spells: [],
+        spellUsages: 1,
+        changes: { strength: 0, craft: 0, lives: 0, fate: 0 },
+      },
+      outOfTurn: {
+        spellUsages: 1,
+      },
     };
   }
 
   update() {
+    this.updateChanges();
+    this.updateItems();
+    //TODO: Check for changes in carryLimit ? Or deal with in in callback.
+  }
+
+  updateItems() {
     for (var i = 0; i < this.state.items.length; i++)
       this.state.items[i].update();
+  }
+
+  updateChanges() {
+    // TODO: Let other players intervene with spells, i.e:
+    // if this player is going to lose a life/die unless someone cast
+    // a spell like 'intervention'
+    this.changeLife(this.state.curTurn.changes.life);
+  }
+
+  changeLife(change) {
+    this.state.lives += change;
+  }
+
+  startTurn() {
+    this.state.curTurn.spellUsages = this.spellCount();
+    this.update(); // Any spells drawn during the players turn don't count to available spellUsages
+  }
+
+  endTurn() {
+    this.state.curTurn.spells = [];
+    this.state.curTurn.cards = [];
+
+    this.state.outOfTurn.spellUsages = this.spellCount();
   }
 
   drawCard(extra = 0) {
@@ -89,20 +133,28 @@ class Character {
     return item.removed(this);
   }
 
-  drawSpell() {
-    var spellName = "a new Spell";
-    this.state.spells.push(spellName);
-    console.log(`${this.state.name} drew ${spellName}`);
+  drawSpells(amount = 1) {
+    for (var i = 0; i < amount; i++) {
+      if (this.hasMaxSpells()) return;
+      var spellName = "a new Spell";
+      this.state.spells.push(spellName);
+      console.log(`${this.state.name} drew ${spellName}`);
+    }
   }
+
   addSpell(spellName) {
     this.state.spells.push(spellName);
     console.log(`${this.state.name} drew ${spellName}`);
   }
 
   useSpell(spellName, target = null) {
-    this.state.spells = [];
-    if (castSpell(this, spellName, target)) {
-      return true;
+    if (this.state.curTurn.spellUsages > 0) {
+      this.state.spells = [];
+      this.state.curTurn.spellUsages--;
+      // True if the target is affected by the spell
+      if (castSpell(this, spellName, target)) {
+        return true;
+      }
     }
     return false;
   }

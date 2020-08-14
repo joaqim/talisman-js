@@ -2,18 +2,22 @@
 
 function always_one_spell(entity) {
   let updateFn = entity.update.bind(entity);
-  entity.update = () => {
-    updateFn();
-    if (entity.state.type == "character") {
-      if (entity.state.spells.length == 0) entity.drawSpell();
-    } else if (entity.state.owner.state.spells.length == 0)
-      entity.state.owner(drawSpell);
-  };
+  if (entity.state.type == "character") {
+    entity.update = () => {
+      updateFn();
+      if (entity.state.spells == 0) entity.drawSpells();
+    };
+  } else {
+    entity.update = () => {
+      updateFn();
+      if (entity.state.owner.spells == 0) entity.state.owner.drawSpells();
+    };
+  }
   return entity;
 }
 
 function may_discard_first_drawn_adventure_card(entity) {
-  entity.drawFn = entity.drawCard.bind(entity);
+  //entity.drawFn = entity.drawCard.bind(entity);
   entity.drawCard = (extra = 0) => {
     const amount = entity.state.cardDraw + extra;
     for (var i = 1; i < amount + 1; i++) {
@@ -27,6 +31,18 @@ function may_discard_first_drawn_adventure_card(entity) {
       //      //Draw another card and keep it.
     }
   };
+  /*
+  if (entity.state.type !== "character") {
+    let addFn = entity.added.bind(entity);
+    entity.added = (owner) => {
+      owner.state.drawCard_call.push(this);
+    };
+    let rmFn = entity.removed.bind(entity);
+    entity.removed = (owner) => {
+      owner.state.drawCard_call.remove(this);
+    };
+  }
+  */
 }
 
 function draw_extra_cards(entity, amount = 1) {
@@ -36,25 +52,21 @@ function draw_extra_cards(entity, amount = 1) {
   };
   let rmFn = entity.removed.bind(entity);
   entity.removed = (owner) => {
-    owner.state.carryLimit -= amount;
+    owner.state.cardDraw -= amount;
     rmFn();
   };
 }
 
-function carry_limit_increase(entity, change = 4) {
-  let addFn = entity.added.bind(entity);
-  entity.added = (owner) => {
-    addFn(owner);
+function change_inventory_size(entity, change = 4) {
+  var table = document
+    .getElementById("inventory")
+    .getElementsByTagName("tbody")[0];
 
-    var table = document
-      .getElementById("inventory")
-      .getElementsByTagName("tbody")[0];
-
+  if (change > 0) {
     var tr = document.createElement("tr");
-    //for (var i = owner.state.carryLimit + 0; i <= owner.carryLimit; i++) {
     for (
-      var i = owner.state.carryLimit + 1;
-      i - 1 < owner.state.carryLimit + change;
+      var i = entity.state.carryLimit + 1;
+      i - 1 < entity.state.carryLimit + change;
       i++
     ) {
       var td = document.createElement("td");
@@ -66,17 +78,22 @@ function carry_limit_increase(entity, change = 4) {
         tr = document.createElement("tr");
       }
     }
+  } else {
+    for (var i = 0; i < -change / 4; i++) table.deleteRow(table.rows - i);
+  }
+  entity.state.carryLimit += change;
+}
 
-    owner.state.carryLimit += change;
+function carry_limit_increase(entity, change = 4) {
+  let addFn = entity.added.bind(entity);
+  entity.added = (owner) => {
+    addFn(owner);
+    change_inventory_size(owner, change);
   };
 
   let rmFn = entity.removed.bind(entity);
   entity.removed = (owner) => {
-    var table = document
-      .getElementById("inventory")
-      .getElementsByTagName("tbody")[0];
-    for (var i = 0; i < change / 4; i++) table.deleteRow(table.rows - i);
-    owner.state.carryLimit -= change;
+    change_inventory_size(owner, -change);
     rmFn();
   };
   return entity;
