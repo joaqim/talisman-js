@@ -10,9 +10,12 @@
   "license": "MIT",
   "devDependencies": {
     "grunt": "^1.2.1",
+    "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-depend-concat": "^0.1.4",
     "grunt-devserver": "^0.6.0",
+    "grunt-gh-pages": "^4.0.0",
+    "grunt-processhtml": "^0.4.2",
     "grunt-terser": "^1.0.0"
   },
   "dependencies": {

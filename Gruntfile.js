@@ -35,6 +35,21 @@ module.exports = function (grunt) {
         dest: "dist/<%= pkg.name %>.min.js",
       },
     },
+    copy: {
+      css: {
+        expand: true,
+        src: ["css/**"],
+        dest: "dist/",
+      },
+    },
+    processhtml: { dist: { files: { "dist/index.html": ["index.html"] } } },
+    "gh-pages": {
+      options: {
+        base: "dist",
+        branch: "main",
+      },
+      src: ["**"],
+    },
   });
 
   grunt.loadNpmTasks("grunt-devserver");
@@ -43,5 +58,16 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-terser");
   grunt.loadNpmTasks("grunt-depend-concat");
 
-  grunt.registerTask("dist", ["depend-concat", "terser"]);
+  grunt.loadNpmTasks("grunt-contrib-copy");
+  grunt.loadNpmTasks("grunt-processhtml");
+  grunt.loadNpmTasks("grunt-gh-pages");
+
+  grunt.registerTask("dist", [
+    "depend-concat",
+    "terser",
+    "processhtml",
+    "copy",
+  ]);
+
+  grunt.registerTask("github", ["dist", "gh-pages"]);
 };
