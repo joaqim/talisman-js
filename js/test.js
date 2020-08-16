@@ -14,12 +14,22 @@ function parse(txt) {
   }
 }
 
+/* Works
 let tokens = [1, "+", 2];
 tokens = [1, "+", 2, "*", 3];
-
 let cmdss = shunting_yard(tokens).toArray();
-
 console.log(vm.execute(cmdss.concat(["print"])));
+*/
+
+
+/* Works
+const hello_world = [104, ".", 101, ".", 108, ".", 108, ".", 111, ".", 44, ".", 32, ".", 119, ".", 111, ".", 114, ".", 108, ".", 100, ".", 10, "."]
+vm.execute(hello_world);
+*/
+var code ="label(main)\n1 2 +\njmp(skip)\n104 .\nlabel(skip)\n 2 +";
+vm.preprocess(code)
+var code =["label(main)",1, 2, "+","jmp(skip)", 104, ".","label(skip)", 2, "+"];
+vm.execute(code)
 
 //vm.interpret([INST.LITERAL, 0, INST.LITERAL, 1, INST.LESS_THAN, INST.PRINT]);
 

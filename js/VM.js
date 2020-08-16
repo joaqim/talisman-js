@@ -5,6 +5,7 @@ class VM extends Stack {
   constructor() {
     super(64);
     this.vars = [];
+    this.labels = [];
   }
 
   store(variable) {
@@ -15,10 +16,9 @@ class VM extends Stack {
     this.push(this.vars[variable]);
   }
 
-  execute(code) {
-    for (let i in code) {
-      const op = code[i];
-      console.log(op);
+  execute(ops) {
+    for (let i in ops) {
+      const op = ops[i];
       if (typeof op == "number") {
         this.push(op);
         continue;
@@ -30,17 +30,49 @@ class VM extends Stack {
           b = this.pop();
           this.push(a + b);
           break;
-        case "*":
+       case "-":
+          a = this.pop();
+          b = this.pop();
+	  this.push(a - b);
+	  break;
+	case "*":
           a = this.pop();
           b = this.pop();
           this.push(a * b);
           break;
-        case "print":
-          console.log(this.pop());
+      	case "/":
+          a = this.pop();
+          b = this.pop();
+          this.push(a / b);
+          break;
+      	case "%":
+          a = this.pop();
+          b = this.pop();
+          this.push(a % b);
+          break;
+        case ".":
+          console.log(String.fromCharCode(this.pop()));
           break;
       }
+      var match = null;
+      match = op.match(/^jump\((.+)\)$/)
+      if(match) console.log(match[1])
+
+      match = op.match(/^label\((.+)\)$/)
+      if(match) continue;
+
     }
+    
     return this.top();
+  }
+
+  preprocess(txt) {
+	  let lines = txt.split(/\r\n|\n|\n/)
+	  console.log(lines)
+	  for(let ip in lines) {
+		  const match = lines[ip].match(/^label\((.+)\)$/);
+		  if(match) this.labels[match[1]] = ip;
+	  }
   }
 
   interpret(bytecode, size = null) {
