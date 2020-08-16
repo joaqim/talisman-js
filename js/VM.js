@@ -6,19 +6,48 @@ class VM extends Stack {
     super(64);
     this.vars = [];
   }
-  
+
   store(variable) {
-	  this.vars[variable] = this.pop();
+    this.vars[variable] = this.pop();
   }
+
   load(variable) {
-	  this.push(this.vars[variable];
+    this.push(this.vars[variable]);
+  }
+
+  execute(code) {
+    for (let i in code) {
+      const op = code[i];
+      console.log(op);
+      if (typeof op == "number") {
+        this.push(op);
+        continue;
+      }
+      var a, b;
+      switch (op) {
+        case "+":
+          a = this.pop();
+          b = this.pop();
+          this.push(a + b);
+          break;
+        case "*":
+          a = this.pop();
+          b = this.pop();
+          this.push(a * b);
+          break;
+        case "print":
+          console.log(this.pop());
+          break;
+      }
+    }
+    return this.top();
   }
 
   interpret(bytecode, size = null) {
     if (size === null) size = bytecode.length;
     for (var i = 0; i < size; i++) {
       let instruction = bytecode[i];
-      //console.log(`${instruction}`);
+      console.log(`${instruction}`);
       let a, b, target;
       switch (instruction) {
         case INST.LITERAL:
@@ -27,7 +56,7 @@ class VM extends Stack {
         case INST.ADD:
           a = this.pop();
           b = this.pop();
-          sizethis.push(a + b);
+          this.push(a + b);
           break;
         case INST.DIVIDE:
           a = this.pop();
@@ -67,4 +96,3 @@ class VM extends Stack {
     }
   }
 }
-
