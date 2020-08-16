@@ -15,10 +15,10 @@ module.exports = function (grunt) {
     watch: {
       js: {
         files: [
-          "json/**.json",
-          "js/*.js",
+          "json/**/*.json",
+          "js/**/*.js",
           "index.html",
-          "css/*.css",
+          "css/**/*.css",
           "assets/**",
         ],
         options: { livereload: true },
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
     json: {
       main: {
         options: { namespace: "talisman" },
-        src: ["json/talisman_board.json"],
+        src: ["json/*.json"],
         dest: "build/compiled_json.js",
       },
     },
@@ -44,7 +44,14 @@ module.exports = function (grunt) {
             tag: "depends",
           },
         },
-        src: ["build/compiled_json.js", "js/**/*.js"],
+        src: [
+          "build/compiled_json.js",
+          "js/modifiers/**.js",
+          "js/characters/**.js",
+          "js/followers/**.js",
+          "js/items/**.js",
+          "js/**/*.js",
+        ],
         dest: "build/<%= pkg.name %>.js",
       },
     },

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "always_one_spell",
+    "callbacks": {
+      "update": {
+        "conditional": {
+          "target": "this",
+          "if": { "less_than_or_eq": ["spell_count", 0] },
+          "do": { "draw_spell": 1 }
+        }
+      }
+    }
+  }
+]

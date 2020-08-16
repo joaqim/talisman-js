@@ -1,0 +1,14 @@
+[
+  { "name": "wolf", "type": "animal", "strength": 4, "wisdom": 0 },
+  {
+    "name": "storm_caller",
+    "type": "cultist",
+    "strength": 4,
+    "wisdom": 0,
+    "conditional": {
+      "target": "player",
+      "if": { "has_armour": true },
+      "do": { "lose_life": 1 }
+    }
+  }
+]
