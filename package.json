@@ -18,5 +18,8 @@
     "grunt-processhtml": "^0.4.2",
     "grunt-terser": "^1.0.0",
     "grunt-json": "^0.2.0"
+  },
+  "dependencies": {
+    "require": "^2.4.20"
   }
 }
