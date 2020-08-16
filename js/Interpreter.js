@@ -1,15 +1,17 @@
 //@depends ./Stack.js
 //@depends ./constants.js
 
-class VM {
+class VM extends Stack {
   constructor() {
-    this.stack = new Stack();
+    super(64);
+    this.vars = [];
   }
-  push(value) {
-    this.stack.push(value);
+  
+  store(variable) {
+	  this.vars[variable] = this.pop();
   }
-  pop() {
-    return this.stack.pop();
+  load(variable) {
+	  this.push(this.vars[variable];
   }
 
   interpret(bytecode, size = null) {
@@ -19,10 +21,6 @@ class VM {
       //console.log(`${instruction}`);
       let a, b, target;
       switch (instruction) {
-        case INST.HAS_ARMOR:
-          console.log(`Does ${party[this.pop()]} have armor?`);
-          this.push(true);
-          break;
         case INST.LITERAL:
           this.push(bytecode[++i]);
           break;
@@ -61,35 +59,6 @@ class VM {
           break;
         case INST.PRINT:
           console.log(this.pop());
-          break;
-        case INST.SET_TRIGGER:
-          console.log(`Set trigger: `);
-          console.log(bytecode[++i]);
-        case INST.CHARACTER_SCOPE:
-          this.scope = "character";
-          break;
-        case INST.LOSE_LIFE:
-          a = this.pop();
-          target = party[this.pop()];
-          console.log(`${target} LOSE_LIFE: ${a}`);
-          break;
-        case INST.GET_WISDOM:
-          target = party[this.pop()];
-          console.log(`Returning ${target}'s wisdom (4)'`);
-          this.push(4);
-          break;
-        case INST.GET_HEALTH:
-          target = party[this.pop()];
-          console.log(`Returning ${target}'s health (10)'`);
-          this.push(10);
-          break;
-        case INST.GET_NUM_SPELLS:
-          console.log(`Returning ${target}'s number of spells (0)'`);
-          this.push(0);
-          break;
-        case INST.DRAW_SPELLS:
-          target = party[this.pop()];
-          console.log(`${target} draws spell(s)'`);
           break;
         default:
           console.log(`${this.pop()} is not implemented.`);

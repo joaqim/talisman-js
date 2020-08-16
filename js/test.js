@@ -2,26 +2,6 @@
 
 let vm = new VM();
 
-//always: { bytecode: `${INST.LITERAL} 0 ${INST.GET_HEALTH} ${INST.PRINT}` },
-
-always_one_spell_obj = {
-  scope: "character",
-  trigger: {
-    always: {
-      //bytecode: `${INST.GET_NUM_SPELLS} ${INST.LITERAL} 1 ${INST.GT_THAN}`,
-      if: {
-        bytecode: `${INST.GET_NUM_SPELLS} ${INST.LITERAL} 1 ${INST.GT_THAN}`,
-      },
-      do: {
-        bytecode: `${INST.LITERAL} 1 ${INST.DRAW_SPELLS}`,
-      },
-    },
-  },
-};
-
-// 1 < 0 = false (prints 0)
-vm.interpret([INST.LITERAL, 0, INST.LITERAL, 1, INST.LESS_THAN, INST.PRINT]);
-
 var cmds = new Stack(16);
 function parse(obj) {
   for (token in obj) {
@@ -30,89 +10,66 @@ function parse(obj) {
         cmds.push(INST.SET_TRIGGER);
         parse(obj[token]);
         break;
-      case "if":
-        break;
       case "bytecode":
         console.log("Code: ");
         obj[token].split(" ").forEach((t) => cmds.push(Number(t)));
         break;
-      case "always":
-        cmds.push(INST.TRIGGER_ALWAYS);
-        parse(obj[token]);
-        break;
-      case "scope":
-        switch (obj[token]) {
-          case "character":
-            cmds.push(INST.CHARACTER_SCOPE);
-            break;
-          case "board":
-            cmds.push(INST.BOARD_SCOPE);
-            break;
-          case "inner_region":
-            cmds.push(INST.INNER_REGION_SCOPE);
-            break;
-          case "outer_region":
-            cmds.push(INST.OUTER_REGION_SCOPE);
-            break;
-          case "center_region":
-            cmds.push(INST.CENTER_REGION_SCOPE);
-            break;
-          default:
-            throw new Error(`${obj[token]} is not a valid scope`);
-        }
     }
   }
 }
 
-parse(always_one_spell_obj);
-console.log(cmds.stack);
-//vm.interpret([INST.SET_TRIGGER, INST.TRIGGER_ALWAYS]);
-//vm.interpret([INST.LITERAL, 0, INST.GET_HEALTH, INST.PRINT]);
-vm.interpret(cmds.stack, cmds.counter);
+vm.interpret([INST.LITERAL, 0, INST.LITERAL, 1, INST.LESS_THAN, INST.PRINT]);
+
+
 
 /*
-cmds.push(INST.LITERAL);
-cmds.push(1);
-cmds.push(INST.LITERAL);
-cmds.push(1);
-cmds.push(INST.ADD);
-console.log(cmds.stack);
+set_target root
+var health
+push 0
+set_variable // Set's the ROOT.health to 0
 */
-//cmds.push(INST.PRINT);
 
-//cmds.push(INST.LITERAL);
-//cmds.push(1);
-//cmds.push(INST.ADD);
-//cmds.push(INST.PRINT);
+//const full_health = 'set_variable = { which = health value = { get_variable = {which = health_max }}}'
+// or:
+//const full_health = 'set_variable = {  .health =  .health_max }'
 
-//console.log(cmds);
-
-//vm.interpret(cmds.stack, cmds.counter);
-//console.log(vm.stack);
-//vm.interpret([INST.PRINT]);
 /*
-vm.interpret([INST.LITERAL, 0]);
-vm.interpret([INST.HAS_ARMOR]);
-vm.interpret([INST.PRINT]);
+.health //  get address of .health var
+.health_max // address used by set_variable
+get_variable  // turns address into value
+set_variable // sets vaule in address of health to health_max value
+*/
 
-vm.push(5);
-vm.push(7);
-vm.interpret([INST.ADD]);
-vm.interpret([INST.PRINT]);
+//  give full health
+/*
+var health
+var health_max
+get_variable
+set_variable // Set's the ROOT.health to the health_max value
+*/
 
-vm.interpret([INST.LITERAL, 69, INST.PRINT]);
 
-vm.interpret([INST.LITERAL, 0, INST.GET_HEALTH, INST.PRINT]);
 
-vm.interpret([INST.LITERAL, 0, INST.LITERAL, 5, INST.LOSE_LIFE]);
+//target default to ROOT in scope ( or previous target )
+//const lose_all_lives_TXT = 'set_variable = { which = health, value = 0 }'
+//
+//const lose_all_lives_TXT = 'set_variable = { target = ROOT which = health, value = 0 }'
+// or:
+//const lose_all_lives_TXT = 'set_variable = { target = ROOT health = 0 }'
+//const lose_all_lives_TXT = 'set_variable = { health = 0 }'
+
 
 // Lose all lives
+/*
 vm.interpret([
-  INST.LITERAL,
-  0,
-  INST.LITERAL,
-  0,
-  INST.GET_HEALTH,
-  INST.LOSE_LIFE,
+  INST.LITERAL, 0, // player 0 ID
+
+
+  INST.LITERAL, 0, // health id var?
+  INST.SET_VARIABLE, //
+//or
+  INST.HEALTH //
+  INST.SET_VARIABLE, //
+
 ]);
 */
