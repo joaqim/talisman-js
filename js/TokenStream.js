@@ -28,9 +28,6 @@ function TokenStream(input) {
   function is_whitespace(ch) {
     return " \t\n".indexOf(ch) >= 0;
   }
-  function is_newline(ch) {
-    return "\n\r".indexOf(ch) >= 0;
-  }
   function read_while(predicate) {
     var str = "";
     while (!input.eof() && predicate(input.peek())) str += input.next();

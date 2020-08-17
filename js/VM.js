@@ -37,9 +37,11 @@ class VM extends Stack {
     var inputStream = InputStream(txt);
     var tokenStream = TokenStream(inputStream);
     var ast = parse(tokenStream);
-    //var globalEnv = new Environment();
-    //globalEnv.def("print", (txt) => console.log(txt));
-    //evaluate(ast, globalEnv);
+    console.log(ast.prog);
+    return;
+    var globalEnv = new Environment();
+    globalEnv.def("print", (txt) => console.log(txt));
+    evaluate(ast, globalEnv);
   }
 
   execute(ops) {

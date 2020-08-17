@@ -122,6 +122,10 @@ function parse(input) {
     expr = expr();
     return is_punc("(") ? parse_call(expr) : expr;
   }
+  function maybe_prog(expr) {
+    expr = expr();
+    return is_punc("{") ? parse_prog(expr) : expr;
+  }
   function parse_atom() {
     return maybe_call(function () {
       if (is_punc("(")) {
@@ -159,7 +163,9 @@ function parse(input) {
   }
   function parse_expression() {
     return maybe_call(function () {
-      return maybe_binary(parse_atom(), 0);
+      return maybe_prog(function () {
+        return maybe_binary(parse_atom(), 0);
+      });
     });
   }
 }

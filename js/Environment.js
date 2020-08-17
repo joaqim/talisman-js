@@ -60,7 +60,9 @@ function evaluate(exp, env) {
 
     case "prog":
       var val = false;
+      //console.log(exp);
       exp.prog.forEach(function (exp) {
+        //console.log(exp);
         val = evaluate(exp, env);
       });
       return val;
