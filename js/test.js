@@ -59,9 +59,18 @@ character = {
 hobo = { lives = 1 };
 print(character)
 `;
-inp = `p = { c = 1; print(c); };`;
+inp = `
+a = p = {
+  c = 1;
+  print(c);
+};
+print(c);
+`;
 
-var input = InputStream(inp)
-var tokens = TokenStream(input)
+var input = InputStream(inp);
+var tokens = TokenStream(input);
 var ast = parse(tokens);
-console.log(ast.prog)
+console.log(ast.prog);
+var globalEnv = new Environment();
+globalEnv.def("print", (txt) => console.log(txt));
+evaluate(ast, globalEnv);

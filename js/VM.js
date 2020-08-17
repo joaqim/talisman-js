@@ -173,7 +173,7 @@ class VM extends Stack {
         case "store":
           [val, addr] = args;
           console.log(val, addr);
-          this.heap[addr] = val;
+          this.keap[addr] = val;
           break;
         case "load":
           [addr] = args;

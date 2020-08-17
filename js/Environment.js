@@ -60,6 +60,7 @@ function evaluate(exp, env) {
 
     case "scope":
       var val = false;
+      //console.log(exp.names);
       exp.scope.forEach(function (exp) {
         val = evaluate(exp, env);
       });
