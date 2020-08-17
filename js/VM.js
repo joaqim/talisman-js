@@ -1,5 +1,9 @@
 //@depends ./Stack.js
 //@depends ./constants.js
+//@depends ./InputStream.js
+//@depends ./TokenStream.js
+//@depends ./parser.js
+//@depends ./Environment.js
 
 class GameDummy {
   constructor() {
@@ -29,23 +33,25 @@ class VM extends Stack {
     this.heap = [];
   }
 
-  store(value, address) {
-    this.heap[(value, address)] = value;
-  }
-
-  load(address) {
-    this.push(this.heap[address]);
-  }
-
   compile(txt) {
-    console.log(this.preprocess(txt));
+    var inputStream = InputStream(txt);
+    var tokenStream = TokenStream(inputStream);
+    var ast = parse(tokenStream);
+    //var globalEnv = new Environment();
+    //globalEnv.def("print", (txt) => console.log(txt));
+    //evaluate(ast, globalEnv);
   }
+
   execute(ops) {
     //for (let i in ops) {
     var ip = 0;
     this.stack = new Stack(this.memSize);
+
     while (ip < ops.length) {
-      const op = ops[ip++];
+      var op_args = ops[ip++];
+      const op = op_args.shift();
+      const args = op_args[0];
+      //op = ops[ip++];
 
       if (this.isNumeric(op)) {
         this.push(op);
@@ -160,55 +166,48 @@ class VM extends Stack {
         continue;
       }
 
-      var a, b;
+      var a, b, c, val, addr;
       switch (op) {
-        case "+":
-          a = this.pop();
-          b = this.pop();
-          this.push(a + b);
+        case "store":
+          [val, addr] = args;
+          console.log(val, addr);
+          this.heap[addr] = val;
           break;
-        case "-":
-          a = this.pop();
-          b = this.pop();
-          this.push(a - b);
+        case "load":
+          [addr] = args;
+          this.push(heap[addr]);
           break;
-        case "*":
-          a = this.pop();
-          b = this.pop();
-          this.push(a * b);
+        case "add":
+          [a, b, c] = args;
+          this.heap[c] = +this.heap[a] + +this.heap[b];
           break;
-        case "/":
-          a = this.pop();
-          b = this.pop();
-          this.push(a / b);
+        case "print_num":
+          [addr] = args;
+          console.log(this.heap[addr]);
           break;
-        case "%":
-          a = this.pop();
-          b = this.pop();
-          this.push(a % b);
+        case "print_char":
+          [addr] = args;
+          console.log(args);
+          console.log(String.fromCharCode(this.heap[addr]));
           break;
-        case "=":
-          a = this.pop();
-          b = this.pop();
-          this.vars[b] = a;
+        case "jump":
+          [ip] = args;
+          break;
+        case "jumpz":
+          [cond_addr, op_addr] = args;
+          if (this.heap[cond_addr] == 0) ip = op_addr;
           break;
         case "{":
           break;
         case "}":
-          if (this.scopes.top() !== 0) this.scopes.pop();
           break;
         case "dup":
-          this.push(this.top());
           break;
         case "ret":
-          this.vars = this.calls.pop(); // restore vars after return from scope
-          ip = this.calls.pop();
           break;
         case ".num":
-          console.log(this.pop());
           break;
         case ".":
-          console.log(String.fromCharCode(this.pop()));
           break;
         default:
           throw new Error(`Invalid operation: ${op}`);
@@ -219,27 +218,38 @@ class VM extends Stack {
   }
 
   preprocess(txt) {
-    txt = txt.trim(/^\n$/); // remove empty lines
+    //txt = txt.trim(/^\n$/); // remove empty lines
     txt = txt.replace(/^(.*)#.*$/gm, "$1"); // remove comments
     txt = txt.replace(/([\S|.])([{|}])([\S]?)/g, "$1 $2 $3"); // add space after and before brackets
     txt = txt.replace(/([\S|.])([{|}])([\S]?)/g, "$1 $2 $3");
 
     txt = txt.trim(/^\n$/); // remove empty lines
 
-    let lines = txt.split(/^\n$|\n\r|\s+/);
+    //let lines = txt.split(/^\n$|\n\r|\s+/);
+    let lines = txt.split("\n");
 
-    lines = shunting_yard(lines).toArray();
+    shunting_yard(lines).toArray();
 
+    let instructions = [];
     let match = null;
-    for (let ip in lines) {
-      let token = lines[ip];
-      if (this.isNumeric(token)) lines[ip] = parseInt(token, 10);
+    for (let i in lines) {
+      let inst = lines[i].split(" ");
+      let token = inst[0];
 
+      if (this.isNumeric(token)) {
+        instructions.push(parseInt(token, 10));
+        continue;
+      }
       match = token.match(/^label\((.+)\)$/);
-      if (match) this.labels[match[1]] = ip;
+      if (match) {
+        this.labels[match[1]] = i;
+        continue;
+      }
+      instructions.push([inst.shift(), inst]);
+      //instructions[inst[0]] = inst[];
     }
     //console.log(this.labels);
-    return lines;
+    return instructions;
   }
 
   isNumeric(value) {
