@@ -1,5 +1,6 @@
 //@depends ./VM.js
 
+/*
 let vm = new VM();
 function testCode(txt) {
   code = vm.preprocess(txt);
@@ -18,6 +19,7 @@ print_num 3
 
 `)
 );
+*/
 
 var inp = `
 always_one_spell = {
@@ -57,6 +59,9 @@ character = {
 hobo = { lives = 1 };
 print(character)
 `;
-inp = `c = { test = 1 };
-print(c)`;
-vm.compile(inp);
+inp = `p = { c = 1; print(c); };`;
+
+var input = InputStream(inp)
+var tokens = TokenStream(input)
+var ast = parse(tokens);
+console.log(ast.prog)

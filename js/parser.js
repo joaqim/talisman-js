@@ -45,11 +45,13 @@ function parse(input) {
     input.croak("Unexpected token: " + JSON.stringify(input.peek()));
   }
   function maybe_binary(left, my_prec) {
-    var tok = is_op();
+    var tok = is_op()
+    //console.log(tok)
     if (tok) {
       var his_prec = PRECEDENCE[tok.value];
       if (his_prec > my_prec) {
         input.next();
+        if(input.peek() !== "{" ) {
         return maybe_binary(
           {
             type: tok.value == "=" ? "assign" : "binary",
@@ -59,13 +61,16 @@ function parse(input) {
           },
           my_prec
         );
+	} else {
+	  return parse_scope()
+	}
       }
     }
     return left;
   }
   function delimited(start, stop, separator, parser) {
     var a = [],
-      first = true;
+    first = true;
     skip_punc(start);
     while (!input.eof()) {
       if (is_punc(stop)) break;
@@ -122,10 +127,10 @@ function parse(input) {
     expr = expr();
     return is_punc("(") ? parse_call(expr) : expr;
   }
-  function maybe_prog(expr) {
-    expr = expr();
-    return is_punc("{") ? parse_prog(expr) : expr;
-  }
+  //function maybe_scope(expr) {
+    //expr = expr();
+    //return is_punc("{") ? parse_scope(expr) : expr;
+  //}
   function parse_atom() {
     return maybe_call(function () {
       if (is_punc("(")) {
@@ -134,7 +139,7 @@ function parse(input) {
         skip_punc(")");
         return exp;
       }
-      if (is_punc("{")) return parse_prog();
+      if (is_punc("{")) return parse_scope();
       if (is_kw("if")) return parse_if();
       if (is_kw("true") || is_kw("false")) return parse_bool();
       if (is_kw("lambda") || is_kw("λ")) {
@@ -148,24 +153,37 @@ function parse(input) {
     });
   }
   function parse_toplevel() {
-    var prog = [];
+    var code = [];
     while (!input.eof()) {
-      prog.push(parse_expression());
+      code.push(parse_expression());
       if (!input.eof()) skip_punc(";");
     }
-    return { type: "prog", prog: prog };
+    return { type: "prog", prog: code };
   }
+  function parse_scope() {
+    var scope = delimited("{", "}", ";", parse_expression);
+    if (scope.length == 0) return FALSE;
+    if (scope.length == 1) return scope[0];
+    return { type: "scope", scope: scope };
+  }
+
   function parse_prog() {
     var prog = delimited("{", "}", ";", parse_expression);
     if (prog.length == 0) return FALSE;
     if (prog.length == 1) return prog[0];
     return { type: "prog", prog: prog };
   }
+
   function parse_expression() {
+	  /*
     return maybe_call(function () {
-      return maybe_prog(function () {
-        return maybe_binary(parse_atom(), 0);
+      return maybe_binary(function () {
+       return maybe_scope(parse_atom(), 0);
       });
     });
+   */
+     return maybe_call(function () {
+       return maybe_binary(parse_atom(), 0);
+     });
   }
 }

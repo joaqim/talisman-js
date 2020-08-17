@@ -7,10 +7,10 @@ Environment.prototype = {
     return new Environment(this);
   },
   lookup: function (name) {
-    var scope = this;
-    while (scope) {
-      if (Object.prototype.hasOwnProperty.call(scope.vars, name)) return scope;
-      scope = scope.parent;
+    var prog = this;
+    while (prog) {
+      if (Object.prototype.hasOwnProperty.call(prog.vars, name)) return prog;
+      prog = prog.parent;
     }
   },
   get: function (name) {
@@ -18,10 +18,10 @@ Environment.prototype = {
     throw new Error("Undefined variable " + name);
   },
   set: function (name, value) {
-    var scope = this.lookup(name);
+    var prog = this.lookup(name);
     // let's not allow defining globals from a nested environment
-    if (!scope && this.parent) throw new Error("Undefined variable " + name);
-    return ((scope || this).vars[name] = value);
+    if (!prog && this.parent) throw new Error("Undefined variable " + name);
+    return ((prog || this).vars[name] = value);
   },
   def: function (name, value) {
     return (this.vars[name] = value);
@@ -58,11 +58,16 @@ function evaluate(exp, env) {
       if (cond !== false) return evaluate(exp.then, env);
       return exp.else ? evaluate(exp.else, env) : false;
 
+    case "scope":
+      var val = false;
+      exp.scope.forEach(function (exp) {
+        val = evaluate(exp, env);
+      });
+      return val;
+
     case "prog":
       var val = false;
-      //console.log(exp);
       exp.prog.forEach(function (exp) {
-        //console.log(exp);
         val = evaluate(exp, env);
       });
       return val;
@@ -124,10 +129,10 @@ function apply_op(op, a, b) {
 function make_lambda(env, exp) {
   function lambda() {
     var names = exp.vars;
-    var scope = env.extend();
+    var prog = env.extend();
     for (var i = 0; i < names.length; ++i)
-      scope.def(names[i], i < arguments.length ? arguments[i] : false);
-    return evaluate(exp.body, scope);
+      prog.def(names[i], i < arguments.length ? arguments[i] : false);
+    return evaluate(exp.body, prog);
   }
   return lambda;
 }
