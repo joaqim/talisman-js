@@ -1,6 +1,9 @@
 always_one_spell = {
   scope = owner
-  potential = {
+
+  saved_scopes = { spells }
+
+  limit = {
     OR = {
       on_start_of_first_turn
       on_spell_count_changed
@@ -13,14 +16,14 @@ always_one_spell = {
     check_variable = { which = "spell_count" value = 0 }
   }
   effect = {
-    draw_spell
+    spells:draw_spell
   }
 }
 
 use_raft = {
   scope = owner
 
-  potential = {
+  limit = {
     on_start_of_turn
   }
 

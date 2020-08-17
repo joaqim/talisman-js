@@ -16,8 +16,12 @@ function has_lower_precedence(o1, o2, operators) {
 }
 
 function shunting_yard(tokens) {
-  let stack = new Stack(16);
+  let stack = new Stack(64);
   let output = new Queue();
+
+  let were = new Stack(64);
+  let values = new Stack(64);
+  let arg_count = new Stack(64);
 
   const operators = {
     "+": { precedence: 0, associativity: "left" },
@@ -25,9 +29,11 @@ function shunting_yard(tokens) {
     "*": { precedence: 1, associativity: "left" },
     "/": { precedence: 1, associativity: "left" },
     "%": { precedence: 1, associativity: "left" },
+    "=": { precedence: 2, associativity: "left" },
   };
 
-  tokens.forEach((token) => {
+  tokens.forEach((x, i) => {
+    const token = tokens[i];
     if (typeof token == "number") {
       output.enqueue(token);
     } else if (operators.hasOwnProperty(token)) {
@@ -52,6 +58,8 @@ function shunting_yard(tokens) {
 
       // pop off '('
       stack.pop();
+    } else if (typeof token == "string") {
+      output.enqueue(token);
     } else throw new Error(`Invalid token: ${token}`);
   });
 
