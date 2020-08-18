@@ -101,9 +101,11 @@ function parse(input) {
     return a;
   }
   function parse_call(func) {
+    // TODO: should func's have explicit scopes?
+    // for now I'm planning on using 'lookup' on saved_scope + scopes + owner.scopes + owner.**.scopes (recursively)
+    //func.scope = scopes.peek();
     return {
       type: "call",
-      scope: scopes.peek(),
       func: func,
       args: delimited("(", ")", ",", parse_expression),
     };

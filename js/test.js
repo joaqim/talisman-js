@@ -163,13 +163,37 @@ b = 5
 #print(b);
 #print(c:a);
 `;
+inp=`
+a = 1;
+b = 2;
+global = { c =  3; };
+print(c);
+`;
 var input = InputStream(inp);
 var tokens = TokenStream(input);
 var ast = parse(tokens);
-console.log(JSON.stringify(ast.prog, null, 2));
-
+//console.log(JSON.stringify(ast.prog, null, 2));
 /*
-var globalEnv = new Environment();
+// works
+var g = new Environment(null);
+//global
+g.set("test", 1);
+
+//scope 1
+sc1 = g.add_scope("sc1");
+sc1.def("var", 10);
+
+//scope 2
+sc2 = g.add_scope("sc2");
+sc2.set_scope("sc1", sc1);
+console.log(sc2.get_from_scope("var", "sc1")) //prints 10, as expected
+*/
+
+
+console.log(JSON.stringify(ast,(key,value) => {if (/owner|scope_saved/.test(key))  return "[.]"; else return value;} ,2));
+
+var globalEnv = new Environment(null);
+console.log(globalEnv)
 // define the "print" primitive function
 globalEnv.def("print", function (callback, txt) {
   console.log(txt);
@@ -182,4 +206,3 @@ evaluate(ast, globalEnv, function (result) {
   // the result of the entire program is now in "result"
   console.log(result);
 });
-*/

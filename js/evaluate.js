@@ -3,38 +3,28 @@ function evaluate(exp, env, callback) {
     case "scope":
       scope_name = exp.names[0] ? exp.names[0] : "character";
       scope_names = exp.names.length > 0 ? exp.names : "global";
+
       console.log("SCOPE", scope_name);
-      //console.log(exp.scope);
-      //env.child = env.extend();
-      //env.child.vars = [];
-      //var tmp = env.vars;
+      var new_env = env.add_scope(scope_name);
+     
 
-      //console.log(env.child);
-      //env.vars = [];
-      env.child = env.extend();
+      console.log(JSON.stringify(exp,null,2));
+      console.log(JSON.stringify(new_env,(key,value) => {if (/owner|scope_saved/.test(key))  return "[.]"; else return value;} ,2));
 
-      if (env.child === undefined) throw new Error(`Assert`);
 
       (function loop(last, i) {
-        if (i < exp.scope.length) {
-          console.log(exp.scope[i]);
-          evaluate(exp.scope[i], env.child, function (val) {
+        if (i < exp.value.length) {
+          console.log(exp.value[i]);
+          evaluate(exp.value[i], env, function (val) {
             loop(val, i + 1);
           });
         } else {
-          console.log(last);
-
-          console.log("child", env.child.vars);
-          console.log("env", env.vars);
-          if (env.vars == env.child.vars)
-            throw new Error(`Assert child vars are unchanged after scope`);
-
+          //console.log("Last value: ",last);
           console.log("SCOPE_END", scope_name);
           callback(last);
         }
         return;
       })(false, 0);
-      console.log(env.vars);
       //console.log("child", env.child.vars);
 
       //if (env.vars == env.child.vars)
