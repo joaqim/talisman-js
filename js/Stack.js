@@ -27,10 +27,14 @@ class Stack {
     this.decrease();
     return val;
   }
-  peek(address) {
-    return this.stack[address];
+  peek(address = null) {
+    return this.stack[address ? address : this.counter];
   }
   top() {
     return this.peek(this.counter);
+  }
+  reset() {
+    this.stack = new Array(this.memSize);
+    this.counter = 0;
   }
 }

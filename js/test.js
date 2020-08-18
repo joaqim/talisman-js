@@ -139,10 +139,34 @@ limit = { b == 2; };
 
 board = { tiles_x = 6; };
 `;
+inp = `
+#a = 1;
+b = 2;
+
+
+faith = { val = 3; };
+
+c = character = {
+  saved_scopes = { faith };
+
+  :a = 3;
+
+  print(:val);
+
+  b = character:a;
+};
+
+print(faith:val);
+
+#print(b)
+b = 5
+#print(b);
+#print(c:a);
+`;
 var input = InputStream(inp);
 var tokens = TokenStream(input);
 var ast = parse(tokens);
-console.log(ast.prog);
+console.log(JSON.stringify(ast.prog, null, 2));
 
 /*
 var globalEnv = new Environment();

@@ -1,4 +1,5 @@
-var FALSE = { type: "bool", value: false };
+//@depends ./Stack.js
+const FALSE = { type: "bool", value: false };
 function parse(input) {
   var PRECEDENCE = {
     "=": 1,
@@ -16,7 +17,12 @@ function parse(input) {
     "/": 20,
     "%": 20,
   };
+
+  var scopes = new Stack(64);
+  var saved_scopes = new Stack(64);
+
   return parse_toplevel();
+
   function is_punc(ch) {
     var tok = input.peek();
     return tok && tok.type == "punc" && (!ch || tok.value == ch) && tok;
@@ -46,6 +52,12 @@ function parse(input) {
   }
   function maybe_binary(left, my_prec, prev_names = []) {
     var tok = is_op();
+    if (left.type === "var") {
+      if (!left.scope) {
+        if (left.scope != "") left.scope = scopes.peek();
+        else left.scope = saved_scopes.peek();
+      }
+    }
     if (tok) {
       var var_name =
         left.value !== undefined ? left.value : prev_names[prev_names.length];
@@ -66,7 +78,7 @@ function parse(input) {
             prev_names
           );
         } else {
-          // assumes it's assignemnt of scope to left keyword(var_name)
+          // assumes it's assignemnt of rhs scope to lhs keyword(var_name)
           if (is_kw(var_name)) return parse_scope(var_name, var_name);
           return parse_scope(prev_names);
         }
@@ -91,6 +103,7 @@ function parse(input) {
   function parse_call(func) {
     return {
       type: "call",
+      scope: scopes.peek(),
       func: func,
       args: delimited("(", ")", ",", parse_expression),
     };
@@ -103,30 +116,28 @@ function parse(input) {
   function parse_scope_kw(type = "scope") {
     skip_kw(type);
     skip_op("=");
+    saved_scopes.push(input.peek());
     return {
       type: `${type}_kw`,
+      scope: scopes.peek(),
       vars: input.next(),
     };
   }
-  function parse_limit() {
-    skip_kw("limit");
-    skip_op("=");
-    /*
-    var cond = parse_expression();
-    return {
-      type: "limit",
-      cond: cond,
-    };
-    */
-    var cond = parse_scope();
-    cond.type = "cond_scope";
-    cond.names = ["limit"];
 
+  function parse_saved_scopes_kw(type = "saved_scopes") {
+    skip_kw(type);
+    skip_op("=");
+    const vars = delimited("{", "}", ",", parse_varname);
+    if (!scopes.peek() || scopes.peek() == "global")
+      throw new Error(`Can't use saved_scopes in global`);
+    saved_scopes.push(vars);
     return {
-      type: "limit",
-      body: cond,
+      type: `${type}`,
+      scope: scopes.peek(),
+      vars: vars,
     };
   }
+
   function parse_if() {
     skip_kw("if");
     var cond = parse_expression();
@@ -134,6 +145,7 @@ function parse(input) {
     var then = parse_expression();
     var ret = {
       type: "if",
+      scope: scopes.peek(),
       cond: cond,
       then: then,
     };
@@ -170,6 +182,7 @@ function parse(input) {
         return exp;
       }
       if (is_kw("scope")) return parse_scope_kw();
+      if (is_kw("saved_scopes")) return parse_saved_scopes_kw();
       if (is_kw("if")) return parse_if();
       if (is_kw("true") || is_kw("false")) return parse_bool();
       if (is_kw("lambda") || is_kw("λ")) {
@@ -184,30 +197,30 @@ function parse(input) {
         return parse_scope([last_value], last_value);
       }
       var tok = input.next();
-      if (
-        tok.type == "var" ||
-        tok.type == "num" ||
-        tok.type == "str" ||
-        tok.type == "var_sc"
-      )
+      if (tok.type == "var" || tok.type == "num" || tok.type == "str")
         return tok;
       unexpected();
     });
   }
   function parse_toplevel() {
     var code = [];
+    scopes.push("global");
     while (!input.eof()) {
       code.push(parse_expression());
       if (!input.eof()) skip_punc(";");
     }
+    //    scopes.pop();
     return { type: "prog", prog: code };
   }
 
   function parse_scope(scope_names, type = "scope") {
+    scopes.push(scope_names[0]);
     var scope = delimited("{", "}", ";", parse_expression);
+    scopes.pop();
+    saved_scopes.reset();
     if (scope.length == 0) return FALSE;
     //if (scope.length == 1) return scope[0];
-    return { type: type, names: scope_names, scope: scope };
+    return { type: type, names: scope_names, value: scope };
   }
 
   function parse_prog() {
@@ -217,7 +230,7 @@ function parse(input) {
     return { type: "prog", prog: prog };
   }
 
-  function parse_expression() {
+  function parse_expression(scopes) {
     /*
     return maybe_call(function () {
       return maybe_binary(function () {

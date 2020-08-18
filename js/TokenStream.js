@@ -1,3 +1,4 @@
+//@depends ./Stack.js
 function TokenStream(input) {
   var current = null;
   var keywords =
@@ -54,7 +55,7 @@ function TokenStream(input) {
     const scope = val2 ? val1 : null;
     const id = val2 ? val2 : val1;
     return {
-      type: is_keyword(id) ? "kw" : scope ? "var_sc" : "var",
+      type: is_keyword(id) ? "kw" : "var",
       value: id,
       scope: scope,
     };
