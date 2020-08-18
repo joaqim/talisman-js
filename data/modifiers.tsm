@@ -1,48 +1,45 @@
 always_one_spell = {
+  # owner of effect / item (think if it as a component )
   scope = owner
 
+  # known scopes ( vars and fuctions that can be used in spells: namespace)
   saved_scopes = { spells }
 
+  # when trigger get's called
   limit = {
     OR = {
       on_start_of_first_turn
       on_spell_count_changed
     }
   }
-  trigger = {
-    has_spell_count = 0
-    has_max_spells = false
-    NOT = { has_max_spells }
-    check_variable = { which = "spell_count" value = 0 }
+
+  # if trigger scope returns true, call effect
+  trigger = { # implied default IF = {...} in this scope
+    spell_count == 0
+    has_max_spells == false
   }
   effect = {
-    spells:draw_spell
+    spells:draw_spell # or :draw_spell, since spells is in saved_scopes
   }
 }
 
 use_raft = {
   scope = owner
 
+  saved_scopes = { board }
+  # can only be used on_start_of_turn (never after you have moved/cast dice)
   limit = {
     on_start_of_turn
   }
 
+  # can only be used when these coditions are filled
   allow = {
-    get_current_tile = {
-      tile_scope = {
-        limit = {
-          check_variable = {
-            which = raft_tiles
-            value > 0
-          }
-        }
-      }
+    limit = { # condition for callback to effect
+        :current_tile:raft_tiles > 0 # expands to: board:current...
     }
   }
+
   effect = {
-    set_variable = {
-      which = possible_tiles
-      value = TILE = { raft_tiles }
-    }
+    possble_tiles = possible_tiles + :current_tile:raft_tiles
   }
 }

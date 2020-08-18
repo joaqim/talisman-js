@@ -1,4 +1,6 @@
 //@depends ./VM.js
+//@depends ./Environment.js
+//@depends ./evaluate.js
 
 /*
 let vm = new VM();
@@ -60,17 +62,100 @@ hobo = { lives = 1 };
 print(character)
 `;
 inp = `
-a = p = {
-  c = 1;
-  print(c);
+
+character = {
+    c = 10;
+    name = "Susy";
+    print(name);
 };
+
+#character:name = character:c;
+#print(character:name);
+
+#cp = character:test;
+:test = 5;
+:test = :test * 10;
+print(ROOT:test);
+#c = hobo : name;
+#print(1 + 3);
+#:c = 5;
+#print(character:test) ;
+
+#character : c;
+
+name = "Gerald";
+i = 1;
+hobo = {
+    name = "hobo";
+    print(name);
+};
+print(i);
+print(name);
+c = 5;
 print(c);
+
+`;
+inp = `
+
+a = 9;
+character = {
+  my_a = 3;
+};
+#print(character:my_a);
+print(a == 9);
+print(a == 3);
+print(a);
+
+#print(test:a == 1);
+
+a = 5;
+print(c:a);
+print(a);
+#name = "garbage";
+#print(name);
+#i = 1;
+
 `;
 
+inp = `
+#c = { c:d = 3; c:k = 5; };
+b = 1;
+c = { b = 0; };
+#print(b);
+c:b = 3;
+print(b);
+d = 0;
+a = 1;
+b = 2;
+
+q = { a = 0;};
+
+print(b);
+scope = owner;
+limit = { print(a);};
+effect = { print(a);};
+test = t = { print(a); true; };
+limit = { b == 2; };
+
+board = { tiles_x = 6; };
+`;
 var input = InputStream(inp);
 var tokens = TokenStream(input);
 var ast = parse(tokens);
 console.log(ast.prog);
+
+/*
 var globalEnv = new Environment();
-globalEnv.def("print", (txt) => console.log(txt));
-evaluate(ast, globalEnv);
+// define the "print" primitive function
+globalEnv.def("print", function (callback, txt) {
+  console.log(txt);
+  callback(false); // call the continuation with some return value
+  // if we don't call it, the program would stop
+  // abruptly after a print!
+});
+// run the evaluator
+evaluate(ast, globalEnv, function (result) {
+  // the result of the entire program is now in "result"
+  console.log(result);
+});
+*/

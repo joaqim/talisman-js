@@ -1,6 +1,7 @@
 function TokenStream(input) {
   var current = null;
-  var keywords = " if then else lambda λ true false ";
+  var keywords =
+    " if then else lambda λ true false scope saved_scopes ROOT PREV PARENT root prev parent owner limit trigger effect limit allow ";
   return {
     next: next,
     peek: peek,
@@ -14,16 +15,19 @@ function TokenStream(input) {
     return /[0-9]/i.test(ch);
   }
   function is_id_start(ch) {
-    return /[a-z_]/i.test(ch);
+    return /[a-z_:]/i.test(ch);
   }
   function is_id(ch) {
-    return is_id_start(ch) || "_-0123456789".indexOf(ch) >= 0;
+    return is_id_start(ch) || "_-0123456789:".indexOf(ch) >= 0;
+  }
+  function is_scoped(str) {
+    return ":".indexOf(str) == 1;
   }
   function is_op_char(ch) {
     return "+-*/%=&|<>!".indexOf(ch) >= 0;
   }
   function is_punc(ch) {
-    return ",;(){}[]".indexOf(ch) >= 0;
+    return ",;(){}[],".indexOf(ch) >= 0;
   }
   function is_whitespace(ch) {
     return " \t\n".indexOf(ch) >= 0;
@@ -46,10 +50,13 @@ function TokenStream(input) {
     return { type: "num", value: parseFloat(number) };
   }
   function read_ident() {
-    var id = read_while(is_id);
+    const [val1, val2] = read_while(is_id).split(":");
+    const scope = val2 ? val1 : null;
+    const id = val2 ? val2 : val1;
     return {
-      type: is_keyword(id) ? "kw" : "var",
+      type: is_keyword(id) ? "kw" : scope ? "var_sc" : "var",
       value: id,
+      scope: scope,
     };
   }
   function read_escaped(end) {

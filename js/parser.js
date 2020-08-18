@@ -47,8 +47,9 @@ function parse(input) {
   function maybe_binary(left, my_prec, prev_names = []) {
     var tok = is_op();
     if (tok) {
-      var name = left.value ? left.value : prev_names[prev_names.length];
-      if (name !== undefined) prev_names.push(name);
+      var var_name =
+        left.value !== undefined ? left.value : prev_names[prev_names.length];
+      if (var_name !== undefined) prev_names.push(var_name.toString());
 
       var his_prec = PRECEDENCE[tok.value];
       if (his_prec > my_prec) {
@@ -65,6 +66,8 @@ function parse(input) {
             prev_names
           );
         } else {
+          // assumes it's assignemnt of scope to left keyword(var_name)
+          if (is_kw(var_name)) return parse_scope(var_name, var_name);
           return parse_scope(prev_names);
         }
       }
@@ -96,6 +99,33 @@ function parse(input) {
     var name = input.next();
     if (name.type != "var") input.croak("Expecting variable name");
     return name.value;
+  }
+  function parse_scope_kw(type = "scope") {
+    skip_kw(type);
+    skip_op("=");
+    return {
+      type: `${type}_kw`,
+      vars: input.next(),
+    };
+  }
+  function parse_limit() {
+    skip_kw("limit");
+    skip_op("=");
+    /*
+    var cond = parse_expression();
+    return {
+      type: "limit",
+      cond: cond,
+    };
+    */
+    var cond = parse_scope();
+    cond.type = "cond_scope";
+    cond.names = ["limit"];
+
+    return {
+      type: "limit",
+      body: cond,
+    };
   }
   function parse_if() {
     skip_kw("if");
@@ -130,10 +160,7 @@ function parse(input) {
     expr = expr();
     return is_punc("(") ? parse_call(expr) : expr;
   }
-  //function maybe_scope(expr) {
-  //expr = expr();
-  //return is_punc("{") ? parse_scope(expr) : expr;
-  //}
+
   function parse_atom() {
     return maybe_call(function () {
       if (is_punc("(")) {
@@ -142,7 +169,7 @@ function parse(input) {
         skip_punc(")");
         return exp;
       }
-      //if (is_punc("{")) return parse_scope(last_value);
+      if (is_kw("scope")) return parse_scope_kw();
       if (is_kw("if")) return parse_if();
       if (is_kw("true") || is_kw("false")) return parse_bool();
       if (is_kw("lambda") || is_kw("λ")) {
@@ -150,8 +177,19 @@ function parse(input) {
         return parse_lambda();
       }
       last_value = input.peek().value;
+      // catches: limit, trigger, effect, allow
+      if (is_kw(last_value)) {
+        skip_kw();
+        skip_op("=");
+        return parse_scope([last_value], last_value);
+      }
       var tok = input.next();
-      if (tok.type == "var" || tok.type == "num" || tok.type == "str")
+      if (
+        tok.type == "var" ||
+        tok.type == "num" ||
+        tok.type == "str" ||
+        tok.type == "var_sc"
+      )
         return tok;
       unexpected();
     });
@@ -164,11 +202,12 @@ function parse(input) {
     }
     return { type: "prog", prog: code };
   }
-  function parse_scope(scope_names) {
+
+  function parse_scope(scope_names, type = "scope") {
     var scope = delimited("{", "}", ";", parse_expression);
     if (scope.length == 0) return FALSE;
-    if (scope.length == 1) return scope[0];
-    return { type: "scope", names: scope_names, scope: scope };
+    //if (scope.length == 1) return scope[0];
+    return { type: type, names: scope_names, scope: scope };
   }
 
   function parse_prog() {
