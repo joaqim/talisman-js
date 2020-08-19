@@ -47,10 +47,10 @@ module.exports = function (grunt) {
         src: [
           "build/compiled_json.js",
           "js/modifiers/**.js",
-          "js/characters/**.js",
-          "js/followers/**.js",
           "js/items/**.js",
-          "js/**/*.js",
+          "js/followers/**.js",
+          "js/characters/**.js",
+          "js/*.js",
         ],
         dest: "build/<%= pkg.name %>.js",
       },
