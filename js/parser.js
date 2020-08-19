@@ -52,12 +52,15 @@ function parse(input) {
   }
   function maybe_binary(left, my_prec, prev_names = []) {
     var tok = is_op();
+    /*
     if (left.type === "var") {
       if (!left.scope) {
         if (left.scope != "") left.scope = scopes.peek();
-        else left.scope = saved_scopes.peek();
+        //else left.scope = saved_scopes.peek();
       }
     }
+    */
+
     if (tok) {
       var var_name =
         left.value !== undefined ? left.value : prev_names[prev_names.length];
@@ -66,6 +69,7 @@ function parse(input) {
       var his_prec = PRECEDENCE[tok.value];
       if (his_prec > my_prec) {
         input.next();
+
         if (input.peek().value !== "{") {
           return maybe_binary(
             {
@@ -102,7 +106,6 @@ function parse(input) {
   }
   function parse_call(func) {
     // TODO: should func's have explicit scopes?
-    // for now I'm planning on using 'lookup' on saved_scope + scopes + owner.scopes + owner.**.scopes (recursively)
     //func.scope = scopes.peek();
     return {
       type: "call",
@@ -199,11 +202,14 @@ function parse(input) {
         return parse_scope([last_value], last_value);
       }
       var tok = input.next();
-      if (tok.type == "var" || tok.type == "num" || tok.type == "str")
+      if (tok.type == "var" || tok.type == "num" || tok.type == "str") {
+        if (tok.scope == "") tok.scope = saved_scopes.peek().value;
         return tok;
+      }
       unexpected();
     });
   }
+
   function parse_toplevel() {
     var code = [];
     scopes.push("global");
@@ -211,8 +217,8 @@ function parse(input) {
       code.push(parse_expression());
       if (!input.eof()) skip_punc(";");
     }
-    //    scopes.pop();
-    return { type: "prog", prog: code };
+    scopes.pop();
+    return { type: "prog", names: "global", prog: code };
   }
 
   function parse_scope(scope_names, type = "scope") {

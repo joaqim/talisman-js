@@ -163,11 +163,36 @@ b = 5
 #print(b);
 #print(c:a);
 `;
-inp=`
-a = 1;
-b = 2;
-global = { c =  3; };
-print(c);
+inp = `
+A = 1;
+B = 2;
+D = 9;
+
+c = {
+  a = 2;
+  b = 3;
+  d = 10;
+};
+
+print(c:d == 10);
+print(A == 1);
+
+
+print("\tend");
+true
+`;
+inp = `
+board = {
+  scope = c;
+  tiles = 1;
+};
+
+character = {
+  scope = board;
+  name = "char";
+  #print(:tiles);
+  #print(board:tiles);
+};
 `;
 var input = InputStream(inp);
 var tokens = TokenStream(input);
@@ -189,11 +214,19 @@ sc2.set_scope("sc1", sc1);
 console.log(sc2.get_from_scope("var", "sc1")) //prints 10, as expected
 */
 
-
-console.log(JSON.stringify(ast,(key,value) => {if (/owner|scope_saved/.test(key))  return "[.]"; else return value;} ,2));
+console.log(
+  JSON.stringify(
+    ast,
+    (key, value) => {
+      if (/owner|scope_saved/.test(key)) return "[.]";
+      else return value;
+    },
+    2
+  )
+);
 
 var globalEnv = new Environment(null);
-console.log(globalEnv)
+console.log(globalEnv);
 // define the "print" primitive function
 globalEnv.def("print", function (callback, txt) {
   console.log(txt);

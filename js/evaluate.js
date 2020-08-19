@@ -6,21 +6,28 @@ function evaluate(exp, env, callback) {
 
       console.log("SCOPE", scope_name);
       var new_env = env.add_scope(scope_name);
-     
 
-      console.log(JSON.stringify(exp,null,2));
-      console.log(JSON.stringify(new_env,(key,value) => {if (/owner|scope_saved/.test(key))  return "[.]"; else return value;} ,2));
-
+      //console.log(JSON.stringify(exp, null, 2));
+      //console.log(JSON.stringify(new_env,(key,value) => {if (/owner|scope_saved/.test(key))  return "[.]"; else return value;} ,2));
 
       (function loop(last, i) {
         if (i < exp.value.length) {
           console.log(exp.value[i]);
-          evaluate(exp.value[i], env, function (val) {
+          evaluate(exp.value[i], new_env, function (val) {
             loop(val, i + 1);
           });
         } else {
-          //console.log("Last value: ",last);
           console.log("SCOPE_END", scope_name);
+          console.log(
+            JSON.stringify(
+              new_env.vars,
+              (key, value) => {
+                if (/owner|scope_saved/.test(key)) return "[.]";
+                else return value;
+              },
+              2
+            )
+          );
           callback(last);
         }
         return;
@@ -31,6 +38,8 @@ function evaluate(exp, env, callback) {
       //throw new Error(`Assert child vars are unchanged after scope`);
       return;
     case "scope_kw":
+      env.set_scope(env.owner.get_scope(exp.vars.value));
+      env.scope_saved = exp.vars.value;
       return;
     case "limit":
       return;
@@ -40,20 +49,21 @@ function evaluate(exp, env, callback) {
       return;
     case "allow":
       return;
-
-    case "var_sc":
-      callback(env.child.get(exp.value));
-      return;
-
     case "num":
     case "str":
     case "bool":
       callback(exp.value);
       return;
     case "var":
-      callback(env.get(exp.value));
+      //TODO: global should just be null
+      if (exp.scope && exp.scope != "global") {
+        callback(env.get_from_scope(exp.value, exp.scope));
+      } else {
+        callback(env.get(exp.value));
+      }
       return;
     case "assign":
+      //console.log(env);
       if (exp.left.type == "var") {
         evaluate(exp.right, env, function (right) {
           callback(env.set(exp.left.value, right));
