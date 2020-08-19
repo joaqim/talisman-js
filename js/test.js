@@ -174,26 +174,51 @@ c = {
   d = 10;
 };
 
+is_ten = {
+	true;
+};
+
+is_true = lambda(val) if val == true { print(true); } else { print(false); };
+
+board = {
+	tiles = 9;
+};
+
+print(board:tiles);
+
+char = {
+	name = "name";
+	scope = board;
+	print(board:tiles);
+	print(:tiles);
+};
+
+print(char:name);
+
 print(c:d == 10);
 print(A == 1);
-
+print(board:tiles == 9);
 
 print("\tend");
-true
+true;
+
 `;
-inp = `
+inp4 = `
 board = {
   scope = c;
   tiles = 1;
 };
 
-character = {
-  scope = board;
-  name = "char";
-  #print(:tiles);
-  #print(board:tiles);
-};
 `;
+
+inp = `
+trigger = { 
+	a = 3;
+	true;
+};
+
+`;
+
 var input = InputStream(inp);
 var tokens = TokenStream(input);
 var ast = parse(tokens);

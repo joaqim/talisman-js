@@ -28,6 +28,7 @@ function evaluate(exp, env, callback) {
               2
             )
           );
+          console.log("Last", last);
           callback(last);
         }
         return;
@@ -38,8 +39,8 @@ function evaluate(exp, env, callback) {
       //throw new Error(`Assert child vars are unchanged after scope`);
       return;
     case "scope_kw":
-      env.set_scope(env.owner.get_scope(exp.vars.value));
       env.scope_saved = exp.vars.value;
+      callback(env.set_scope(env.owner.get_scope(exp.vars.value)));
       return;
     case "limit":
       return;

@@ -22,7 +22,7 @@ Environment.prototype = {
     return this.scopes[name] || null;
   },
   save_scope: function (name) {
-    this.scope_saved = this.scopes[name];
+    return this.scope_saved = this.scopes[name];
   },
   lookup_scope: function (name) {
     var env = this;
@@ -41,7 +41,10 @@ Environment.prototype = {
   },
   get_from_scope: function (name, scope_name) {
     //return this.lookup(name);
-    if (scope_name in this.scopes) return this.scopes[scope_name].get(name);
+	  /// TODO: Quite messy. . . Split up Global "scope" (!this.owner) to a new class
+	  if(this.owner) {
+		  if (scope_name in this.owner.scopes) return this.owner.scopes[scope_name].get(name);
+	  } else if (scope_name in this.scopes) return this.scopes[scope_name].get(name);
     throw new Error("Scope not found for scope: " + scope_name + " : " + name);
   },
   get: function (name) {
