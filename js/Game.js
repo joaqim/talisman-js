@@ -4,18 +4,6 @@
 p = new Prophetess();
 
 class Game extends StateMachine {
-  // Gets applied on apply_changes state after
-  // battle/entity_effect/spell_effect/card_effect/tile_effect
-  // this is so effects like the spell "Preservation" can
-  // be used to prevent life lost
-  // Rune_sword for example doesn't use this, since it's effect
-  // can't be prevented.
-  changes = {
-    lives: 0,
-    strength: 0,
-    craft: 0,
-    fate: 0,
-  };
   turn = {
     mulligans: 0,
   };
@@ -94,6 +82,10 @@ class Game extends StateMachine {
     this.player.addEntity(CrystalBall(this.player));
     this.player.drawCard({ game: this, deck: "adventure", amount: 1 });
   }
+  testBattle() {
+    this.player.battleWon(Wolf());
+    console.log(this.player.state.trophies);
+  }
 
   drawSpell(entity, amount) {
     if (!entity.hasMaxSpells()) {
@@ -104,7 +96,8 @@ class Game extends StateMachine {
 }
 
 game = new Game(cfg);
-game.testPlayer();
+//game.testPlayer();
+game.testBattle();
 /*
 var timer = setInterval(function () {
   game.update();

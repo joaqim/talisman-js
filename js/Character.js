@@ -9,9 +9,12 @@ class Character extends Entity {
     fate,
     gold,
 
+    //TODO: needs to be arrays to allow duplicate entries
     items = new Map(),
     followers = new Map(),
-    spells = new Map()
+    spells = new Map(),
+
+    trophys = new Array()
   ) {
     super();
     this.state = {
@@ -26,7 +29,31 @@ class Character extends Entity {
       items,
       followers,
       spells,
+      trophys, //misspelled on purpose to make it easier to convert state.type = "trophy"+s -> "trophys"
+
     };
+
+    // Gets applied on apply_changes state after
+    // battle/entity_effect/spell_effect/card_effect/tile_effect
+    // this is so effects like the spell "Preservation" can
+    // be used to prevent life lost
+    // Rune_sword for example doesn't use this, since it's effect
+    // can't be prevented.
+    this.changes = {
+      lives: 0,
+      strength: 0,
+      craft: 0,
+      fate: 0,
+    };
+  }
+
+  get(index) {
+  }
+  add(entity) {
+    // item(s), trophy(s), follower(s), spell(s)
+    let arr = this.state[`${entity.state.type}s`];
+  }
+  remove(entity) {
   }
 
   addEntity(entity) {
@@ -72,17 +99,34 @@ class Character extends Entity {
   }
   //onDrawCard(game, deck_name, amount) {}
   onDrawCard() {}
+
   /*
   drawCard(game, deck_name = "adventure", amount = 1) {
     this.onDrawCard(game, deck_name, amount);
   }
-  //onDrawCard(game, deck_name, amount) {}
+//onDrawCard(game, deck_name, amount) {}
   onDrawCard(game, deck_name, amount) {
     if (game === undefined) throw new Error("onDrawCard(): game is undefined");
   }
   */
-  /*
+
+  // Battle
+  battleWon(target) {
+   this.onBattleWon(target);
+  }
+
+  onBattleWon(target) {
+    console.log(target)
+    if(target.state.type == "creature") {
+      target.defeated(this);
+    }
+  }
+  addTrophy(trophy) {
+    console.log(`${this.state.name} gained a trophy: ${trophy.state.real_name} with ${trophy.value.value + " " + trophy.value.type} .`);
+    this.state.trophys.push(trophy);
+  }
   // Items
+/*
   useItem(game,item) {}
   addItem(game,item) {}
   discardItem(game,item) {}
@@ -93,6 +137,7 @@ class Character extends Entity {
   discardFollower(game,follower) {}
   dropFollower(game,follower) {}
   */
+
   // Spells
   useSpell() {
     this.onUseSpell();

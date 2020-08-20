@@ -1,12 +1,9 @@
-//@depends ./Atom.js
-// Object or Follower ( probably will extend )
-class Entity extends Atom {
-  constructor(name, real_name, type, category, mods = [], args = []) {
-    super();
-    this.state = { name, real_name, type, category };
-    for (let i in mods) mods[i](this, args[i]);
-  }
+//@depends ./BaseEntity.js
 
+class Entity extends BaseEntity {
+  constructor(name, real_name, type, category, mods = [], args = []) {
+    super(name, real_name, type, category, mods, args)
+  }
   canHold() {
     return true;
   }

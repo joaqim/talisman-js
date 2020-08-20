@@ -11,8 +11,8 @@ function add_mod(entity, func_name, callback, replace = false) {
 function add_mod2(entity, mod) {
   let Fn = entity[mod.when].bind(entity);
   entity[mod.when] = (target) => {
-    mod.callback(target);
     if (mod.replace == false) Fn();
+    mod.callback(target);
   };
 }
 
@@ -188,6 +188,21 @@ const required_alignment_to_use_NOT = (entity, alignment) =>
 }
 
 function weapon_lifesteal(entity, amount = 1) {
+
+  // If battle won with entity(weapon) equipped
+  // and the owner choose to take life
+  // or the target was a creature
+  //
+  add_mod2(entity, "onBattleWon", (owner, target) => {
+      if(target.type == "creature") {
+        console.log(`${entity.state.real_name} was used to steal ${amount} life from ${target.state.real_name}`)
+        owner.changes.lives = +1;
+      } else if (target.changes == -1) {
+        console.log(`${entity.state.real_name} was used to steal ${amount} life from ${target.state.name}`)
+        owner.changes.lives = +1;
+      }
+  });
+}
   /*
   let eqFn = entity.equipped.bind(entity);
   entity.equipped = (owner) => {
@@ -204,7 +219,6 @@ function weapon_lifesteal(entity, amount = 1) {
     owner.changeLife(+amount);
   };
   */
-}
 /*
 function can_steal_follower(entity, followers = ["any"], follower_not = []) {}
 //TODO: requriments for checking aligment i.e can't steal from "good"/"evil"

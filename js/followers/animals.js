@@ -1,6 +1,6 @@
 // @depends ../Entity.js
 const Mule = () =>
-  new Entity("mule", "follower", [carry_limit_increase], [{ change: 4 }]);
+  new Entity("mule","Mule", "follower", "Animal", [carry_limit_increase], [{ change: 4 }]);
 const HorseAndCart = () =>
   new Entity(
     "horse_and_cart",

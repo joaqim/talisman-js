@@ -50,6 +50,7 @@ module.exports = function (grunt) {
           "js/items/**.js",
           "js/followers/**.js",
           "js/characters/**.js",
+          "js/creatures/**.js",
           "node_modules/javascript-state-machine/dist/state-machine.js",
           "js/*.js",
         ],
