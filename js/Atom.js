@@ -1,14 +1,14 @@
 class Atom {
   constructor() {}
 
-  init() {
-    this.onInit();
+  init(game) {
+    this.onInit(game);
   }
 
-  update() {
-    this.onUpdate();
+  update(game) {
+    this.onUpdate(game);
   }
 
-  onInit() {}
-  onUpdate() {}
+  onInit(game) {}
+  onUpdate(game) {}
 }

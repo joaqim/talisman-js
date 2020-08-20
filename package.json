@@ -15,9 +15,10 @@
     "grunt-depend-concat": "^0.1.4",
     "grunt-devserver": "^0.6.0",
     "grunt-gh-pages": "^4.0.0",
+    "grunt-json": "^0.2.0",
     "grunt-processhtml": "^0.4.2",
     "grunt-terser": "^1.0.0",
-    "grunt-json": "^0.2.0"
+    "javascript-state-machine": "^3.1.0"
   },
   "dependencies": {
     "require": "^2.4.20"

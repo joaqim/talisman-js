@@ -1,16 +1,10 @@
 //@depends ./Atom.js
 // Object or Follower ( probably will extend )
 class Entity extends Atom {
-  constructor() {
+  constructor(name, real_name, type, category, mods = [], args = []) {
     super();
-  }
-
-  init() {
-    this.onInit();
-  }
-
-  update() {
-    this.onUpdate();
+    this.state = { name, real_name, type, category };
+    for (let i in mods) mods[i](this, args[i]);
   }
 
   canHold() {
@@ -22,19 +16,48 @@ class Entity extends Atom {
   }
 
   use() {
-    return this.onUse();
+    this.onUse();
+    return true;
   }
 
-  discard() {
-    onDiscard();
+  added(owner) {
+    this.onAdded(owner);
+    return true;
   }
-  onDiscard() {}
+  removed(owner) {
+    return this.onRemoved(owner);
+  }
+  used(owner, target = null) {
+    this.onUsed(owner, target);
+    return { val: true };
+  }
+  canDrop(owner) {
+    return this.onCanDrop();
+  }
+  onCanDrop() {
+    return true;
+  }
+  onAdded(owner) {
+    return { val: true };
+  }
+  onRemoved(owner) {
+    return true;
+  }
+  onUse(owner, target) {
+    return true;
+  }
 
-  onUseSpell() {}
-  onUseSpellSuccess() {}
-  onUseSpellFailure() {}
+  reqUse(owner, target = null) {
+    return this.onReqUse(owner, target);
+  }
+  reqAdd(owner) {
+    return this.onReqAdd(owner);
+  }
 
-  onInit() {}
-  onUpdate() {}
-  onUse() {}
+  onReqUse(owner, target = null) {
+    return { val: true };
+  }
+  onReqUse(owner) {
+    return { val: true };
+  }
 }

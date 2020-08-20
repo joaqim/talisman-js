@@ -1,11 +1,18 @@
 //@depends Entity.js
 
-gamestate = {
-  decks: { adventure: [("Ogre", "Wolf")], spells: ["Random", "Destruction"] },
-};
-
 class Character extends Entity {
-  constructor(name, health, strength, craft, fate, gold, items = []) {
+  constructor(
+    name,
+    health,
+    strength,
+    craft,
+    fate,
+    gold,
+
+    items = new Map(),
+    followers = new Map(),
+    spells = new Map()
+  ) {
     super();
     this.state = {
       name,
@@ -14,57 +21,95 @@ class Character extends Entity {
       craft,
       fate,
       gold,
+      carryLimit: 4,
 
-      items: items || new Array(),
-      spells: new Array(),
-      followers: new Array(),
+      items,
+      followers,
+      spells,
     };
   }
 
-  init() {
-    this.onInit();
+  addEntity(entity) {
+    this.state[`${entity.state.type}s`][entity.state.name] = entity;
+    entity.added(this);
+    console.log(
+      `${this.state.name} added ${entity.state.type}:  ${entity.state.name}`
+    );
   }
 
-  update() {
-    this.onUpdate();
+  discardEntity(entity_name, type) {
+    let map = this.state[`${type}s`];
+    map[entity_name].removed(this);
+    map.delete(entity_name);
   }
+  dropEntity(entity_name, type) {
+    let map = this.state[`${type}s`];
 
-  onInit() {}
-  onUpdate() {
-    console.log("Name: ", this.state.name);
+    // Check if entity can be dropped
+    let val = map[entity_name].canDrop(this);
+    if (val.val == false) return val;
+
+    map[entity_name].removed(this);
+    let entity = Object.create(map[entity_name]);
+    map.delete(entity_name);
+    return { val: entity };
   }
-
-  drawCard(deck_name = "adventure", amount = 1) {
-    this.onDrawCard(deck_name, amount);
+  useEntity(entity_name, type, target = null) {
+    let map = this.state[`${type}s`];
+    return map[entity_name].use(this, target);
   }
-
-  drawMulligan(amount, deck_name, max = 1) {
-    console.log(`Mulligan ${amount - 1}/${max}`);
+  canUse(entity_name, type, target = null) {
+    let map = this.state[`${type}s`];
+    return map[entity_name].reqUse(this, target);
   }
-
-  drawSpell(deck_name) {
-    this.onDrawSpell(deck_name);
+  drawCard(args) {
+    args = {
+      game: args.game,
+      deck: args.deck ? args.deck : "adventure",
+      amount: args.amount ? args.amount : 1,
+    };
+    this.onDrawCard(args);
   }
-
-  onDrawCard(deck_name, amount) {}
-  onDrawSpell() {}
-
+  //onDrawCard(game, deck_name, amount) {}
+  onDrawCard() {}
+  /*
+  drawCard(game, deck_name = "adventure", amount = 1) {
+    this.onDrawCard(game, deck_name, amount);
+  }
+  //onDrawCard(game, deck_name, amount) {}
+  onDrawCard(game, deck_name, amount) {
+    if (game === undefined) throw new Error("onDrawCard(): game is undefined");
+  }
+  */
+  /*
+  // Items
+  useItem(game,item) {}
+  addItem(game,item) {}
+  discardItem(game,item) {}
+  dropItem(game,item)
+  // Followers
+  useFollower(game,follower) {}
+  addFollower(game,follower) {}
+  discardFollower(game,follower) {}
+  dropFollower(game,follower) {}
+  */
+  // Spells
   useSpell() {
     this.onUseSpell();
     // onUseSpellSucess
     // onUseSpellFailure
   }
 
-  onCombat() {}
-  onLoss() {}
-  onWin() {}
-  onTakeLife() {}
-
-  drawSpell(amount = 1) {
-    console.log("draw spell", amount);
-    this.state.spells.push("Random");
+  addSpell(spell) {
+    this.state.spells[spell.name] = spell;
+  }
+  hasMaxSpells() {
+    return this.spellCount() < this.maxSpells();
+  }
+  maxSpells() {
+    return Math.min(0, Math.floor(this.state.craft / 2));
   }
   spellCount() {
-    return this.state.spells.length;
+    return this.state.spells.size;
   }
 }
