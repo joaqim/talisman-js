@@ -233,4 +233,13 @@ var cfg = {
       },
     },
   ],
+  assets: [
+    {
+      id: "board",
+      src: "assets/talisman_board_hr.jpg",
+      width: 4581,
+      height: 3026,
+    },
+    { id: "prophetess", src: "assets/prophetess.png", width: 120, height: 120 },
+  ],
 };

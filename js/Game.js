@@ -1,15 +1,18 @@
 //@depends ./PubSub.js
 //@depends ../node_modules/javascript-state-machine/dist/state-machine.js
+//@depensd ./AssetsManager.js
 
 p = new Prophetess();
 
-class Game extends StateMachine {
+class GameState extends StateMachine {
   turn = {
     mulligans: 0,
   };
 
   players = [p];
   player = p;
+  ctx = document.getElementById("canvas").getContext("2d");
+  am = new AssetsManager(cfg);
 
   constructor(cfg) {
     super(cfg.state);
@@ -93,13 +96,38 @@ class Game extends StateMachine {
       entity.addSpell({ name: "random" });
     }
   }
+
+  drawImage(name, x, y, opts = {}) {
+    const img = this.am.get(name);
+    if (opts.x) this.ctx.drawImage(img, x, y, opts.x, opts.y);
+    else if (opts.scale)
+      this.ctx.drawImage(
+        img,
+        x,
+        y,
+        img.width * opts.scale,
+        img.height * opts.scale
+      );
+    else this.ctx.drawImage(img, x, y);
+  }
+
+  start() {
+    console.log();
+    this.drawImage("board", 0, 0, { scale: 0.2 });
+  }
 }
 
-game = new Game(cfg);
+//game = new Game(cfg);
 //game.testPlayer();
-game.testBattle();
+//game.testBattle();
 /*
 var timer = setInterval(function () {
   game.update();
 }, 1000 / 3);
 */
+
+window.onload = function () {
+  //game = new GameState(cfg);
+  game = new Game();
+  game.start();
+};

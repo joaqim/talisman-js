@@ -25,10 +25,16 @@ module.exports = function (grunt) {
         tasks: ["build"],
       },
     },
+    jshint: {
+      esversion: 6,
+      jshintrc: true,
+      beforeconcat: ["js/Board.js"],
+      afterconcat: ["b/"],
+    },
     json: {
       main: {
         options: { namespace: "talisman" },
-        src: ["json/*.json"],
+        src: ["json/**/*.json"],
         dest: "build/compiled_json.js",
       },
     },
@@ -91,6 +97,7 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks("grunt-devserver");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-contrib-jshint");
 
   grunt.loadNpmTasks("grunt-json");
   grunt.loadNpmTasks("grunt-terser");
