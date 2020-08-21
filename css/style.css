@@ -2658,3 +2658,86 @@ table {
     height: 30px;
     background-position: 0 -90px;
 }
+
+img {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+#character_token {
+  opacity: 1;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /*
+  position: absolute;
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+  */
+}
+#board-wrapper {
+  /*
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  */
+  position: absolute;
+  margin-left: 10%;
+  margin-top: 20%;
+  transform: perspective( 2040px ) rotateX( 35deg ) rotateZ(0deg) translateZ(217px);
+
+  -webkit-animation-name: boardinit;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 3.5s;
+  animation-name: boardinit;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+  animation-duration: 3.5s;
+}
+canvas#board {
+  /*  float: none; margin-top: 15%;*/
+  z-index: -1;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20%;
+  /*
+  transform: perspective( 2040px ) rotateX( 15deg ) translateZ(217px);
+   */
+  /*
+  -webkit-animation-name: boardinit;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 3.5s;
+  animation-name: boardinit;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+  animation-duration: 3.5s;
+  */
+}
+
+@-webkit-keyframes turn90 {
+from {
+  transform: perspective( 240px ) rotateZ( 90deg ) rotateY(0deg);
+}
+}
+
+@-webkit-keyframes boardinit {
+from {
+transform: perspective( 240px ) rotateZ( 200deg ) rotateY(0deg);
+}
+}
+@keyframes boardinit {
+from {
+transform: perspective( 240px ) rotateZ( 200deg ) rotateY(0deg);
+}
+}
