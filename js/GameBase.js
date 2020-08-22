@@ -15,9 +15,9 @@ class Game {
     ];
     this.mousedown = false;
 
-    document.addEventListener("mousedown", this.initMouseMove);
-    document.addEventListener("mousemove", this.mouseMove);
-    document.addEventListener("mouseup", this.stopMouseMove);
+    //document.addEventListener("mousedown", this.initMouseMove);
+    //document.addEventListener("mousemove", this.mouseMove);
+    //document.addEventListener("mouseup", this.stopMouseMove);
   }
   // Initialize the movement
   //
@@ -121,13 +121,32 @@ class Game {
       this.boardEl.appendChild(tileBtn);
       this.moveToTile(tileBtn, i);
     }
+
+    var dice = document.getElementById("dice");
+    this.spinDice(dice);
+  }
+
+  async spinDice(dice) {
+    let z = 0;
+    let x = 0;
+    let y = 117;
+    while (true) {
+      x += 86;
+      z += 36;
+      y += 10;
+      z = z % 360;
+      x = x % 360;
+      y = y % 117;
+      dice.style.WebkitTransform = `rotateX(${x}deg)rotateZ(${z}deg) translateZ(${y}px)`;
+      await this.timeout(1500);
+    }
   }
 
   async loopTiles(el) {
     for (var i = 1; i < 50; i++) {
       this.moveToTile(el, i);
       //this.zoomToTile(el, i);
-      await this.timeout(300);
+      await this.timeout(500);
     }
   }
 
