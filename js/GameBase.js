@@ -3,16 +3,81 @@
 
 class Game {
   constructor() {
-    this.boardEl = document.getElementById("board");
-    this.ctx = this.boardEl.getContext("2d");
+    this.boardEl = document.getElementById("board-wrapper");
+    this.ctx = document.getElementById("board").getContext("2d");
     this.asm = new AssetsManager(cfg);
     this.width = 969;
     this.height = 640;
+    //    this.width = 4581;
+    //this.height = 3026;
     this.dirty_frames = [
       { x: 0, y: 0, width: this.width, height: this.height },
     ];
+    this.mousedown = false;
+
+    document.addEventListener("mousedown", this.initMouseMove);
+    document.addEventListener("mousemove", this.mouseMove);
+    document.addEventListener("mouseup", this.stopMouseMove);
+  }
+  // Initialize the movement
+  //
+  initMouseMove(evt) {
+    this.mousedown = true;
+    this.mx = evt.clientX;
+    this.my = evt.clientY;
+  }
+  rotate(M, center, theta, phi) {
+    // Rotation matrix coefficients
+    var ct = Math.cos(theta);
+    var st = Math.sin(theta);
+    var cp = Math.cos(phi);
+    var sp = Math.sin(phi);
+
+    // Rotation
+    var x = M.x - center.x;
+    var y = M.y - center.y;
+    var z = M.z - center.z;
+
+    M.x = ct * x - st * cp * y + st * sp * z + center.x;
+    M.y = st * x + ct * cp * y - ct * sp * z + center.y;
+    M.z = sp * y + cp * z + center.z;
+  }
+  mouseMove(evt) {
+    if (this.mousedown) {
+      console.log(dx, dy);
+      var dx = ((evt.clientX / 1000) * 180) / Math.PI;
+      var dy = ((evt.clientY / 1000) * 180) / Math.PI;
+
+      console.log(dx, dy);
+      /*
+      var theta = ((evt.clientX - this.mx) * Math.PI) / 360;
+      var phi = ((evt.clientY - this.my) * Math.PI) / 180;
+
+      var ct = Math.cos(theta);
+      var st = Math.sin(theta);
+      var cp = Math.cos(phi);
+      var sp = Math.sin(phi);
+
+      console.log(ct, st, cp, sp);
+      let box..x = ct - st * cp + st * sp;
+      */
+
+      document.getElementById("board-wrapper").style.WebkitTransform = `
+    perspective(2040px)
+    rotateX(${dx}deg)
+    rotateY(${dx}deg)
+    translateZ(217px)
+    `;
+
+      //this.boardEl.WebkitTransform = "rotateX(-20deg)";
+      this.mx = evt.clientX;
+      this.my = evt.clientY;
+    }
   }
 
+  stopMouseMove() {
+    this.mousedown = false;
+  }
   start() {
     this._previousElapsed = 0;
 
@@ -25,50 +90,116 @@ class Game {
   }
 
   init() {
-    //this.boardEl.style.WebkitTransform = "rotateZ(20deg)";
-    //
-    //this.moveBoard(0, 0);
     //this.transformBoard(35, 120);
+    /*
+    this.transformBoard(5, 0, 0, -20, {
+      x: (-this.width / 2) * 2.3,
+      y: (-this.height / 2) * 4.3,
+    });
+    */
     var img = this.asm.get("prophetess");
-    img.id = "character_token";
-    document.getElementById("board-wrapper").appendChild(img);
-    var bRect = this.boardEl.getBoundingClientRect();
-    //img.style.WebkitTransform = "translateZ(1909px)"; //"translate3d(190px, 120px, 0px);rotateZ(90deg)";
+    img.id = "character-token";
+    // Important to do for centering? voodoo magic
+    img.style.left = `${-img.width * 2.5 * (this.width / 4581)}px`; // -63.5px
+    img.style.top = `${img.height * 4 * (this.height / 3026)}px`; // 100px
+    //console.log(img.style.left, img.style.top);
 
-    //this.transformBoard(x, z);
-    //this.transform(img, x, z, { x: 0, y: -0 });
+    document.getElementById("board-wrapper").appendChild(img);
+    this.loopTiles(img);
+
+    img = this.asm.get("100x100");
+    img.id = "character-token";
+    img.style.left = `${-img.width * 2.5 * (this.width / 4581)}px`; // -63.5px
+    img.style.top = `${img.height * 4 * (this.height / 3026)}px`; // 100px
+
+    for (var i = 1; i < 50; i++) {
+      let tileBtn = document.createElement("img");
+      tileBtn.src = img.src;
+      tileBtn.id = "tile-button";
+      tileBtn.style.left = "-50px"; //`${-img.width * 2.5 * (this.width / 4581)}px`; // -63.5px
+      tileBtn.style.top = "+150px"; // `${img.height * 4 * (this.height / 3026)}px`; // 100px
+      this.boardEl.appendChild(tileBtn);
+      this.moveToTile(tileBtn, i);
+    }
   }
 
-  transform(elem, x, z, move = { x: 0, x: 0 }) {
+  async loopTiles(el) {
+    for (var i = 1; i < 50; i++) {
+      this.moveToTile(el, i);
+      //this.zoomToTile(el, i);
+      await this.timeout(300);
+    }
+  }
+
+  moveToTile(el, index) {
+    this.moveToTileAtPos(
+      el,
+      talisman.talisman_board[index].center.x,
+      talisman.talisman_board[index].center.y
+    );
+  }
+
+  zoomToTile(el, index) {
+    let rot = 90;
+    if (index < 7 || (index > 25 && index < 29) || (index > 45 && index < 48)) {
+      rot = 180;
+    } else if (index < 13 || (index < 33 && index > 29)) {
+      rot = 90;
+    } else if (index < 19 || (index < 37 && index > 33)) {
+      rot = 0;
+    } else if (index < 24 || (index < 40 && index > 36)) {
+      rot = -90;
+    }
+    this.transformBoard(35, rot, 0, 0);
+  }
+
+  moveToTileAtPos(el, x, y) {
+    //this.move(el, -el.width / 2, el.height * 1.115);
+    this.move(el, x * (this.width / 4581), y * (this.height / 3026));
+    //el.style.left = `${x * (969 / 4581)}px`;
+    //el.style.top = `${(y - 30) * (640 / 3026)}px`;
+  }
+
+  transform(elem, x, z, move = { x: 0, y: 0 }) {
     var rotate = -90;
 
     elem.style.WebkitTransform = `
     perspective(2040px)
-    /*
     rotateX(${x}deg)
     rotateZ(${z}deg)
     rotate(${rotate}deg)
     translateZ(217px)
     translate3d(${move.x}px, ${move.y}px, 10px)
-    */
     `;
   }
-  /*
+
   move(elem, x, y) {
-    elem.style.WebkitTransform = `translate3d(${x}px, ${y}0px, 0px)`;
+    //elem.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0px)`;
+    elem.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0px)`;
+
+    elem.style.WebkitTransform += `rotateX(5deg)`;
   }
+  /*
   transform(elem, x, z) {
     elem.style.WebkitTransform = `perspective(2040px) rotateX(${x}deg) rotateZ(${z}deg) translateZ(217px) `;
   }
   */
 
   moveBoard(x, y) {
-    this.boardEl.style.WebkitTransform = `translate3d(${x}px, ${y}0px, 0px)`;
+    this.boardEl.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0px)`;
   }
   update(delta) {}
+  timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-  transformBoard(x, z) {
-    this.boardEl.style.WebkitTransform = `perspective(2040px) rotateX(${x}deg) rotateZ(${z}deg) translateZ(217px) `;
+  transformBoard(x, z, y, zoom = 1.0, move = { x: 0, y: 0 }) {
+    this.boardEl.style.WebkitTransform = `perspective(2040px) rotateX(${x}deg) rotateZ(${z}deg) rotateY(${y}deg) translateZ(${
+      217 * zoom
+    }px) `;
+    this.boardEl.style.WebkitTransform += `translate3d(${move.x}px, ${
+      move.y
+    }px, ${0}px)`;
   }
   transform_() {
     var orient = camera.getOrientation();
@@ -143,4 +274,3 @@ class Game {
     if (this.dirty_frames.length) this.render();
   };
 }
-
