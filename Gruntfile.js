@@ -19,6 +19,7 @@ module.exports = function (grunt) {
           "js/**/*.js",
           "index.html",
           "css/**/*.css",
+          "styles/**/*.scss",
           "assets/**",
         ],
         options: { livereload: true },
@@ -30,6 +31,20 @@ module.exports = function (grunt) {
       jshintrc: true,
       beforeconcat: ["js/Board.js"],
       afterconcat: ["b/"],
+    },
+    sass: {
+      // Task
+      dist: {
+        // Target
+        options: {
+          // Target options
+          style: "expanded",
+        },
+        files: {
+          // Dictionary of files
+          "build/css/main.css": "styles/main.scss", // 'destination': 'source'
+        },
+      },
     },
     json: {
       main: {
@@ -76,6 +91,12 @@ module.exports = function (grunt) {
         src: ["css/**", "assets/**"],
         dest: "dist/",
       },
+      scss_assets: {
+        expand: true,
+        src: ["build/css/**"],
+        flatten: true,
+        dest: "dist/css/",
+      },
       public: {
         expand: true,
         src: ["public/*"],
@@ -99,6 +120,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-jshint");
 
+  grunt.loadNpmTasks("grunt-contrib-sass");
   grunt.loadNpmTasks("grunt-json");
   grunt.loadNpmTasks("grunt-terser");
   grunt.loadNpmTasks("grunt-depend-concat");
@@ -107,8 +129,14 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-processhtml");
   grunt.loadNpmTasks("grunt-gh-pages");
 
-  grunt.registerTask("build", ["json", "depend-concat"]);
-  grunt.registerTask("dist", ["build", "terser", "processhtml", "copy"]);
+  grunt.registerTask("build", ["json", "depend-concat", "sass"]);
+  grunt.registerTask("dist", [
+    "build",
+    "terser",
+    "sass",
+    "processhtml",
+    "copy",
+  ]);
 
   grunt.registerTask("github", ["dist", "gh-pages"]);
 };
