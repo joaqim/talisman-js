@@ -1,10 +1,13 @@
 html {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
+  -html-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -user-drag: none;
+  -webkit-user-drag: none;
+
 }
 #centerinfo{
   overflow-y: scroll;
@@ -2667,32 +2670,52 @@ img {
   -webkit-user-drag: none;
   -user-drag: none;
   -webkit-touch-callout: none;
+
+  transform-origin: center;
 }
 
-#character_token {
+#tile-button {
+  opacity: 0.3;
+  position: absolute;
+}
+
+#character-token {
   opacity: 1;
   position: absolute;
+  transition: .2s ease-in-out;
+/*
   left: 50%;
   top: 50%;
-  /*
-  position: absolute;
   -webkit-transform-origin: 50% 50%;
   -moz-transform-origin: 50% 50%;
   -ms-transform-origin: 50% 50%;
   -o-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
   */
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 3.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+  animation-duration: 3.5s;
 }
+
 #board-wrapper {
   /*
     display: block;
   margin-left: auto;
   margin-right: auto;
   */
+
   position: absolute;
-  margin-left: 10%;
-  margin-top: 20%;
+  display: block;
+  margin-left: 5%;
+  margin-top: 8em;
+  transform-origin: center;
+  -webkit-transform-origin: center;
+
   transform: perspective( 2040px ) rotateX( 35deg ) rotateZ(0deg) translateZ(217px);
+  transition: .2s ease-in-out;
 
   -webkit-animation-name: boardinit;
   -webkit-animation-timing-function: ease;
@@ -2710,6 +2733,7 @@ canvas#board {
   margin-left: auto;
   margin-right: auto;
   margin-top: 20%;
+  transform-origin: center;
   /*
   transform: perspective( 2040px ) rotateX( 15deg ) translateZ(217px);
    */
@@ -2724,7 +2748,7 @@ canvas#board {
   animation-duration: 3.5s;
   */
 }
-
+/*
 @-webkit-keyframes turn90 {
 from {
   transform: perspective( 240px ) rotateZ( 90deg ) rotateY(0deg);
@@ -2741,3 +2765,4 @@ from {
 transform: perspective( 240px ) rotateZ( 200deg ) rotateY(0deg);
 }
 }
+*/
