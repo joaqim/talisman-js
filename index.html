@@ -16,6 +16,37 @@
     <body>
 
       <div oncontextmenu="return false;" id="main">
+
+
+
+        <div id="board-wrapper">
+          <img id="character-token" src="https://via.placeholder.com/50x100" style="left: 969px;top:640px"/>
+          <!--<canvas id="board" width="969" height="640">-->
+          <canvas id="board" width="969" height="640">
+          <!--<canvas id="board" width="4581" height="3026">-->
+        </canvas>
+        </div>
+
+
+        <div id="viewscreen"></div>
+
+        <table class="inventory" id="inventory">
+          <tr>
+            <td id="i1" class="slot "></td>
+            <td id="i2" class="slot "></td>
+            <td id="i3" class="slot "></td>
+            <td id="i4" class="slot "></td>
+          </tr>
+        </table>
+
+        <div class="col-x-3" id="playerstats">
+          <table id="statstable">
+            <tr>
+              <td class="statsprite -health"></td>
+              <td class="statnum" id="health"></p></td>
+            </tr>
+          </table>
+        </div>
         <div class="dice-container">
       <div class="dice" id="dice">
          <div class="front">
@@ -54,37 +85,6 @@
       </div>
    </div>
       </div>
-
-
-
-        <div id="board-wrapper">
-          <img id="character-token" src="https://via.placeholder.com/50x100" style="left: 969px;top:640px"/>
-          <!--<canvas id="board" width="969" height="640">-->
-          <canvas id="board" width="969" height="640">
-          <!--<canvas id="board" width="4581" height="3026">-->
-        </canvas>
-        </div>
-
-
-        <div id="viewscreen"></div>
-
-        <table class="inventory" id="inventory">
-          <tr>
-            <td id="i1" class="slot "></td>
-            <td id="i2" class="slot "></td>
-            <td id="i3" class="slot "></td>
-            <td id="i4" class="slot "></td>
-          </tr>
-        </table>
-
-        <div class="col-x-3" id="playerstats">
-          <table id="statstable">
-            <tr>
-              <td class="statsprite -health"></td>
-              <td class="statnum" id="health"></p></td>
-            </tr>
-          </table>
-        </div>
 
               <!-- jQuery first, then Popper.js, then Bootstrap JS -->
       <!--
