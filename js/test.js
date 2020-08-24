@@ -20,7 +20,8 @@ window.onload = function () {
     board.currentPlayerMove = img;
 
     var routes = board.getPossibleRoutes(1, 6);
-    console.log(JSON.stringify(routes, null, 2));
-    board.walkToTile(img, 33);
+    console.log(JSON.stringify(routes, null, 1));
+    board.moveToTile(img, 1);
+    board.walkRoute(img, routes);
   });
 };

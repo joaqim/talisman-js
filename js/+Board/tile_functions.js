@@ -16,11 +16,40 @@ Board.prototype.moveToTile = function (el, index) {
     this.tiles[index].center.y
   );
 };
-Board.prototype.walkToTile = async function (el, index) {
-  //for loop until reach target
-  this.moveToTile(el, index);
-  await this._timeout(500);
+Board.prototype.getRoute = async function (graph,start,end) {
+  let queue = [[start]];
+  let visitedNodes = new Set();
+
+  while(queue.length > 0) {
+    let path = queue.shift()
+    console.log(path);
+    let currentNode = path[path.length-1]
+    if(currentNode === end){
+      return path
+    } else if (  currentNode === null || currentNode === undefined || currentNode.children.length == 0) {
+      return path
+    } else if (!visitedNodes.has(currentNode)){
+      let children = currentNode.children;
+      for(let i in children) queue.push(children[i])
+      visitedNodes.add(currentNode);
+          }
+
+  }
+}
+
+Board.prototype.walkRoute = async function (el, route) {
+  let tile = route[0]
+  console.log(tile)
+  this.moveToTile(el, tile.id);
+  /*
+  while(tile.children !== undefined && tile.children.length > 0) {
+    this._timeout(500);
+    this.walkRoute(el, tile.children[0].id);
+  }
+  */
 };
+
+
 Board.prototype._tilePressed = function (index) {
   console.log(index);
   if (this.currentPlayerMove) this.moveToTile(this.currentPlayerMove, index);
@@ -59,6 +88,57 @@ Board.prototype.getPossibleRoutes = function (
         children: makeRoute(id, list, maxMoves),
       }));
 
+  const searchTree = (element, id, elements = []) => {
+    elements.unshift(element);
+    if(element.id && element.id == id){
+      return elements;
+    } else if (element.children != null){
+      var i;
+      var result = null;
+      elements = [];
+      for(i=0; result == null && i < element.children.length; i++){
+        result = searchTree(element.children[i], id, elements);
+      }
+      return result;
+    }
+    return null;
+  }
+
+  const shortestPath = (graph, start, end) => {
+    //let queue = new Array();
+    //queue.push(start);
+    let queue = [[start]];
+    let visitedNodes = new Set();
+
+    while(queue.length > 0) {
+      let path = queue.shift()
+      console.log(path);
+      let currentNode = path[path.length-1]
+      //let currentNode = path;
+      //console.log(currentNode);
+      if(currentNode === end){
+        return path
+      } else if (  currentNode === null || currentNode === undefined || currentNode.children.length == 0) {
+        // return null;
+        return path
+      } else if (!visitedNodes.has(currentNode)){
+        let children = currentNode.children;
+        for(let i in children) queue.push(children[i])
+        visitedNodes.add(currentNode);
+      }
+      /*
+      let currentNode = path[path.length - 1]
+      if (currentNode === end) {
+        return path
+      } else if (!visitedNodes.has(currentNode)) {
+        let neighborNodes = graph[currentNode]
+        queue.push(neighborNodes)
+        visitedNodes.add(currentNode)
+      }
+      */
+    }
+  }
+
   var parent = startTile.id;
   let item;
   while ((item = queue.shift())) {
@@ -75,7 +155,6 @@ Board.prototype.getPossibleRoutes = function (
       //console.log("From: ", item.id, "To: ", index);
       if (neighbour.conditional) {
         for (const cond in neighbour.conditional) {
-          console.log(cond);
           if (cond == "portal_of_power") {
             queue.push({ neighbours: [], moves: moves + 1 });
             conditional = "portal_of_power";
@@ -109,6 +188,11 @@ Board.prototype.getPossibleRoutes = function (
     }
   }
 
-  return makeRoute(startTile.id, list, maxMoves);
-  //  return getSimpleRouteTo(3, makeRoute(startTile.id, list, maxMoves));
+  //return makeRoute(startTile.id, list, maxMoves);
+  //return getSimpleRouteTo(3, makeRoute(startTile.id, list, maxMoves));
+  var routes = makeRoute(startTile.id, list, maxMoves);
+  console.log(routes[0]);
+  var end = searchTree(routes[0], 7)
+  console.log("end",end[0].id)
+  return shortestPath(list,routes[0],end[0]);
 };
