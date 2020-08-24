@@ -2,8 +2,6 @@
 //@depends ../node_modules/javascript-state-machine/dist/state-machine.js
 //@depensd ./AssetsManager.js
 
-p = new Prophetess();
-
 class GameState extends StateMachine {
   turn = {
     mulligans: 0,
@@ -126,8 +124,8 @@ var timer = setInterval(function () {
 }, 1000 / 3);
 */
 
-window.onload = function () {
-  //game = new GameState(cfg);
-  game = new Game();
-  game.start();
-};
+//window.onload = function () {
+//game = new GameState(cfg);
+//game = new Game();
+//game.start();
+//};

@@ -208,6 +208,7 @@ class Game {
     this.boardEl.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0px)`;
   }
   update(delta) {}
+
   timeout(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

@@ -1,0 +1,70 @@
+Board.prototype.move = function (el, x, y) {
+  el.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0px)`;
+};
+
+Board.prototype.moveBoard = function (x, y) {
+  this.el.style.WebkitTransform = `translate3d(${x}px, ${y}px, 0px)`;
+};
+
+Board.prototype.moveToTileAtPos = function (el, x, y) {
+  this.move(el, x * (this.width / 4581), y * (this.height / 3026));
+};
+Board.prototype.moveToTile = function (el, index) {
+  this.moveToTileAtPos(
+    el,
+    this.tiles[index].center.x,
+    this.tiles[index].center.y
+  );
+};
+Board.prototype.walkToTile = async function (el, index) {
+  //for loop until reach target
+  moveToTile(el, index);
+  await this._timeout(500);
+};
+
+Board.prototype._timeout = function (ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
+const makeForest = (id, xs) =>
+  xs
+    .filter(({ parent }) => parent == id)
+    .map(({ id, parent, ...rest }) => ({
+      id,
+      ...rest,
+      children: makeForest(id, xs),
+    }));
+
+Board.prototype.calculateRoutes = function (
+  startIndex,
+  distance,
+  tiles = null
+) {
+  //tiles = tiles || [startIndex];
+  function makeRoute(inds, tile) {
+    return tile.neighbours.filter((neighbour) => {
+      console.log(neighbour);
+      if (!inds.has(neighbour)) inds.add(neighbour);
+      inds.add(neighbour);
+    });
+  }
+
+  tile = this.tiles[startIndex];
+  inds = new Set();
+  inds.add(startIndex);
+
+  makeRoute(inds, tile);
+
+  console.log(JSON.stringify(inds, null, 2));
+
+  /*
+  if (distance > 0) {
+    for (i in tile.neighbours) {
+    }
+    distance--;
+    //this._calculateRoutes(next, distance, tiles);
+  } else {
+  }
+  */
+};
+

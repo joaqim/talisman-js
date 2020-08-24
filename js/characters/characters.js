@@ -1,4 +1,4 @@
-//@depends ../Character.js
+//@depends ../+Character/Character.js
 
 class Prophetess extends Character {
   constructor() {

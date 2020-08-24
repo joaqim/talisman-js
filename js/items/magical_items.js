@@ -1,6 +1,6 @@
-// @depends ../Entity.js
+// @depends ../+Entities/Object.js
 const RuneSword = () =>
-  new Entity(
+  new Object(
     "rune_sword",
     "Rune sword",
     "item",
@@ -11,7 +11,7 @@ const RuneSword = () =>
 
 //TODO: Can be used onCardDraw for owner
 const CrystalBall = () =>
-  new Entity(
+  new Object(
     "crystal_ball",
     "Crystal Ball",
     "item",
@@ -31,10 +31,10 @@ class CrystalBall extends Entity {
 */
 
 const spell_book = () =>
-  new Entity("spell_book", "magical_item", [always_one_spell]);
+  new Object("spell_book", "magical_item", [always_one_spell]);
 
 const rune_sword = () =>
-  new Entity(
+  new Object(
     "rune_sword",
     "magical_weapon",
     [required_alignment_to_use, weapon_lifesteal],
@@ -42,7 +42,7 @@ const rune_sword = () =>
   );
 
 const holy_grail = () =>
-  new Entity(
+  new Object(
     "holy_grail",
     "magical_item",
     [required_alignment_to_use],

@@ -1,4 +1,4 @@
-//@depends Entity.js
+//@depends ../+Entities/Entity.js
 
 class Character extends Entity {
   constructor(
@@ -30,7 +30,6 @@ class Character extends Entity {
       followers,
       spells,
       trophys, //misspelled on purpose to make it easier to convert state.type = "trophy"+s -> "trophys"
-
     };
 
     // Gets applied on apply_changes state after
@@ -47,14 +46,12 @@ class Character extends Entity {
     };
   }
 
-  get(index) {
-  }
+  get(index) {}
   add(entity) {
     // item(s), trophy(s), follower(s), spell(s)
     let arr = this.state[`${entity.state.type}s`];
   }
-  remove(entity) {
-  }
+  remove(entity) {}
 
   addEntity(entity) {
     this.state[`${entity.state.type}s`][entity.state.name] = entity;
@@ -112,21 +109,25 @@ class Character extends Entity {
 
   // Battle
   battleWon(target) {
-   this.onBattleWon(target);
+    this.onBattleWon(target);
   }
 
   onBattleWon(target) {
-    console.log(target)
-    if(target.state.type == "creature") {
+    console.log(target);
+    if (target.state.type == "creature") {
       target.defeated(this);
     }
   }
   addTrophy(trophy) {
-    console.log(`${this.state.name} gained a trophy: ${trophy.state.real_name} with ${trophy.value.value + " " + trophy.value.type} .`);
+    console.log(
+      `${this.state.name} gained a trophy: ${trophy.state.real_name} with ${
+        trophy.value.value + " " + trophy.value.type
+      } .`
+    );
     this.state.trophys.push(trophy);
   }
   // Items
-/*
+  /*
   useItem(game,item) {}
   addItem(game,item) {}
   discardItem(game,item) {}
