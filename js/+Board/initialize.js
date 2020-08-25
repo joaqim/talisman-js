@@ -16,7 +16,7 @@ Board.prototype.initialize = function () {
     tileBtn.style.left = "-50px"; //`${-img.width * 2.5 * (this.width / 4581)}px`; // -63.5px
     tileBtn.style.top = "+150px"; // `${img.height * 4 * (this.height / 3026)}px`; // 100px
     this.el.appendChild(tileBtn);
-    this.moveToTile(tileBtn, i);
+    this.moveToTileID(tileBtn, i);
     tileBtn.onclick = () => this._tilePressed(tileBtn.index);
     this.tiles[i].el = tileBtn;
   }
