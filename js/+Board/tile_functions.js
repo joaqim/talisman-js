@@ -10,15 +10,17 @@ Board.prototype.moveToTileAtPos = function (el, x, y) {
   this.move(el, x * (this.width / 4581), y * (this.height / 3026));
 };
 Board.prototype.moveToTileID = function (el, id) {
+  //console.log("moving to: ", id);
   this.moveToTileAtPos(el, this.tiles[id].center.x, this.tiles[id].center.y);
 };
 Board.prototype.walkToTileID = async function (el, id) {
   this.moveToTileAtPos(el, this.tiles[id].center.x, this.tiles[id].center.y);
-  await this._timeout(500);
+  this.currentIndex = id;
+  await this._timeout(this.walkDelayMS);
 };
 Board.prototype.walkToTile = async function (el, tile) {
   this.moveToTileAtPos(el, tile.center.x, tile.center.y);
-  await this._timeout(500);
+  await this._timeout(this.walkDelayMS);
 };
 Board.prototype.moveToTile = function (el, tile) {
   this.moveToTileAtPos(el, tile.center.x, tile.center.y);
@@ -26,28 +28,18 @@ Board.prototype.moveToTile = function (el, tile) {
 
 Board.prototype.walkPath = async function (el, id, parents) {
   if (id == null) return;
-  await this.walkToTileID(el, id + 1);
+  this.moveToTileID(el, id);
+  await this._timeout(this.walkDelayMS);
+  this.currentIndex = id;
   this.walkPath(el, parents[id], parents);
 };
 
-/*
-Board.prototype.walkPath = async function (el, path, end = null) {
-  for (const index of path) {
-    this.moveToTileID(el, index + 1);
-    if (index == end) return;
-    await this._timeout(500);
-  }
-  /*
-  while(tile.children !== undefined && tile.children.length > 0) {
-    this._timeout(500);
-    this.walkRoute(el, tile.children[0].id);
-  }
-};
-*/
-
 Board.prototype._tilePressed = function (index) {
-  console.log(index);
-  if (this.currentPlayerMove) this.moveToTileID(this.currentPlayerMove, index);
+  if (this.currentPlayerMove) {
+    this.moveToTileID(this.currentPlayerMove, index + 1);
+    let [paths, parents] = this.graph.dijkstra(index);
+    this.walkPath(this.currentPlayerMove, this.currentIndex, parents);
+  }
 };
 
 Board.prototype._timeout = function (ms) {

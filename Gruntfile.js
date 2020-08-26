@@ -98,6 +98,13 @@ module.exports = function (grunt) {
         flatten: true,
         dest: "dist/css/",
       },
+      assets: {
+        expand: true,
+        src: ["assets/**"],
+        flatten: true,
+        dest: "build/assets/",
+      },
+
       public: {
         expand: true,
         src: ["public/*"],
@@ -130,7 +137,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-processhtml");
   grunt.loadNpmTasks("grunt-gh-pages");
 
-  grunt.registerTask("build", ["json", "depend-concat", "sass"]);
+  grunt.registerTask("build", ["json", "depend-concat", "sass", "copy"]);
   grunt.registerTask("dist", [
     "build",
     "terser",

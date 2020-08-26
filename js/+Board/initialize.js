@@ -5,10 +5,10 @@ Board.prototype.initialize = function () {
   img.style.left = `${-img.width * 2.5 * (this.width / 4581)}px`; // -63.5px
   img.style.top = `${img.height * 4 * (this.height / 3026)}px`; // 100px
 
-  //for (i in this.tiles) this.tiles[i].id = Number(i);
+  //for (i in this.tiles) this.tiles[i - 1] = this.tiles[i];
   //console.log(JSON.stringify(this.tiles));
 
-  for (var i = 1; i < 50; i++) {
+  for (var i = 0; i < 49; i++) {
     let tileBtn = document.createElement("img");
     tileBtn.src = img.src;
     tileBtn.index = i;

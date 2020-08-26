@@ -6,4 +6,8 @@ function Board(asm) {
   this.height = 640;
   this.tiles = talisman.talisman_board;
   this.dirty_frames = [{ x: 0, y: 0, width: this.width, height: this.height }];
+
+  this.walkDelayMS = 400;
+
+  this.graph = new Graph(graph_cfg);
 }
