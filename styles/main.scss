@@ -1,4 +1,5 @@
-
+@import "./dice.scss";
+@import "./card.scss";
 
 html {
   -webkit-touch-callout: none;
@@ -99,4 +100,3 @@ canvas#board {
   transform-origin: center;
 }
 
-@import "./dice.scss";

@@ -1,8 +1,9 @@
 //@depends ./+Board/Board.js
 //@depends ./AssetsManager.js
+//@depends ./+Game/Game.js
 
 window.onload = function () {
-  asm = new this.AssetsManager(cfg);
+  asm = new this.AssetsManager(assets_cfg);
 
   Promise.all(asm.loadAssets()).then(function (_loaded) {
     var board = new Board(asm);
@@ -23,6 +24,18 @@ window.onload = function () {
 
     let dice = new Dice();
     dice.spinDice();
+
+    var game = new Game(game_cfg, this.asm);
+    //    var state = new StateMachine(game_cfg.state);
+    //game.testTurns();
+
+    var deck = new Deck(deck_cfg.adventure_deck);
+    deck.shuffle();
+    console.log(deck.draw(2));
+
+    var wolf = document.getElementById("card-container");
+    board.moveToTileID(wolf, 49);
+    //wolf.style.WebkitTransform = `rotateX(-35deg)`;
 
     return;
     var start = 0;

@@ -1,7 +1,7 @@
 //@depends ./AssetsManager.js
 //@depends ./game_cfg.js
 
-class Game {
+class GameOld {
   constructor() {
     this.boardEl = document.getElementById("board-wrapper");
     this.ctx = document.getElementById("board").getContext("2d");

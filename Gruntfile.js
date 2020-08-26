@@ -66,6 +66,7 @@ module.exports = function (grunt) {
           },
         },
         src: [
+          "node_modules/javascript-state-machine/dist/state-machine.js",
           "build/compiled_json.js",
           "js/+Entities/**.js",
           "js/modifiers/**.js",
@@ -73,7 +74,6 @@ module.exports = function (grunt) {
           "js/followers/**.js",
           "js/characters/**.js",
           "js/creatures/**.js",
-          "node_modules/javascript-state-machine/dist/state-machine.js",
           "js/**/*.js",
         ],
         dest: "build/<%= pkg.name %>.js",
@@ -100,9 +100,9 @@ module.exports = function (grunt) {
       },
       assets: {
         expand: true,
-        src: ["assets/**"],
-        flatten: true,
-        dest: "build/assets/",
+        src: ["assets/**/**"],
+        flatten: false,
+        dest: "build//",
       },
 
       public: {

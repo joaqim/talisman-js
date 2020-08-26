@@ -8,12 +8,11 @@ EVENT = {
   SPELL_CAST: 6,
 };
 
-var cfg = {
+const game_cfg = {
   state: {
     init: "init",
     transitions: [
       { name: "startTurn", from: ["init", "end_turn"], to: "start_turn" },
-
       {
         name: "movement",
         from: [
@@ -126,21 +125,6 @@ var cfg = {
       },
       //{ name: "drawCard", from: "card_event",to: "" },
     ],
-    methods: {
-      onInit: function () {
-        console.log("Init");
-
-        return false; // Return false, otherwise onInit get's called twice
-      },
-      onStartTurn: function () {
-        console.log("onStartTurn");
-        return false;
-      },
-      onRollDice: function () {},
-      onMove: function () {},
-      onEndTurn: function () {},
-      onUseItem: function () {},
-    },
   },
   events: [
     // Defeated -> [killed, stalemate -> turn end] ( you can be force to stalemate by spells )
@@ -232,15 +216,5 @@ var cfg = {
         this.onPlayerDrawSpell(by);
       },
     },
-  ],
-  assets: [
-    {
-      id: "board",
-      src: "assets/talisman_board_hr.jpg",
-      width: 4581,
-      height: 3026,
-    },
-    { id: "prophetess", src: "assets/prophetess.png", width: 120, height: 120 },
-    { id: "100x100", src: "assets/100x100.png", width: 100, height: 100 },
   ],
 };

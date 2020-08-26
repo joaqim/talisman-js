@@ -29,12 +29,14 @@ Board.prototype.moveToTile = function (el, tile) {
 Board.prototype.walkPath = async function (el, id, parents) {
   if (id == null) return;
   this.moveToTileID(el, id);
+  console.log(id);
   await this._timeout(this.walkDelayMS);
   this.currentIndex = id;
   this.walkPath(el, parents[id], parents);
 };
 
 Board.prototype._tilePressed = function (index) {
+  console.log(index);
   if (this.currentPlayerMove) {
     this.moveToTileID(this.currentPlayerMove, index + 1);
     let [paths, parents] = this.graph.dijkstra(index);

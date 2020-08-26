@@ -1,18 +1,15 @@
 //@depends ../PubSub.js
-//@depends ../node_modules/javascript-state-machine/dist/state-machine.js
-//@depensd ../AssetsManager.js
+//@depends ../../node_modules/javascript-state-machine/dist/state-machine.js
+//@depensd ./game_cfg.js
 
-class GameState extends StateMachine {
-  ctx = document.getElementById("canvas").getContext("2d");
-  am = new AssetsManager(cfg);
-
-  constructor(cfg) {
+class Game extends StateMachine {
+  constructor(cfg, asm) {
+    console.log(cfg.state);
     super(cfg.state);
+    this.asm = asm;
     PubSub.enable(this);
     for (let index in cfg.events) {
       this.subscribe(index, cfg.events[index].action);
     }
   }
 }
-
-window.onload = function () {};

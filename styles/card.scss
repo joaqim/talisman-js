@@ -1,0 +1,52 @@
+#card-container {
+   #card {
+     img {
+       position: absolute;
+     }
+
+    #content {
+      width: 90px;
+      margin-left: 5px;
+      margin-top: 26px;
+    }
+
+    #foreground {
+       width: 100px;
+       mask-image: url("../assets/ui/cards/adventurebgsmallpic_alpha.png");
+       -webkit-mask-image: url("../assets/ui/cards/adventurebgsmallpic_alpha.png");
+       mask-size: 100px 200px;
+       -webkit-mask-size: 100px 200px;
+     }
+     table {
+       position: absolute;
+       border: none;
+       margin-left: auto;
+       margin-right: auto;
+       margin-top: 12px;
+       text-align: center;
+       border-collapse: collapse;
+
+       td {
+         font-size: 10px;
+         margin-left: auto;
+         color: rgb(0,0, 0)
+       }
+
+      #card-name {
+         font-size: 10px;
+       }
+
+       #card-category {
+         font-size: 5.5px;
+         padding-top: 71px;
+         color: rgb(255,255, 255)
+       }
+
+       #card-text {
+         font-size: 10px;
+         padding-top: 10px;
+         width: 100px;
+       }
+     }
+   }
+ }
