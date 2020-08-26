@@ -33,14 +33,14 @@ img {
 }
 
 #tile-button {
-  visibility: hidden;
+  opacity: 0;
   position: absolute;
 }
 
 #character-token {
   opacity: 1;
   position: absolute;
-  transition: 0.5s ease-in-out;
+  transition: 0.4s ease-out;
   /*
     left: 50%;
     top: 50%;
@@ -134,9 +134,10 @@ canvas#board {
   /* for Safari */
   background-clip: padding-box;
   /* for IE9+, Firefox 4+, Opera, Chrome */
-  box-shadow: 0px 0px 0px 2px rgba(68, 51, 0, 0.8);
-  border-radius: 6px;
-  border-radius: 16px;
+  box-shadow: 0px 0px 0px 2px rgba(85, 51, 17, 0.8);
+  border-radius: 8px;
+  background-image: url(../assets/dice_texture-marble1.jpg);
+  background-size: 100px;
 }
 .dice span {
   width: 8px;
@@ -181,6 +182,14 @@ canvas#board {
 }
 .dice .back {
   transform: rotateX(180deg) translateZ(30px);
+}
+.dice .back img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 8px;
+  width: 40px;
+  height: 40px;
 }
 .dice .back span {
   top: 26px;
