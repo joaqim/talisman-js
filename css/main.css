@@ -1,97 +1,3 @@
-html {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -html-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -user-drag: none;
-  -webkit-user-drag: none;
-}
-
-body {
-  padding: 10px;
-  background-color: #222;
-  width: 100%;
-  height: 100vh;
-  /*background: url("https://res.cloudinary.com/treborx555/image/upload/v1472724902/photo-1457903685934-249e8108a246_v8ugfn.jpg");*/
-  background-size: 100vw;
-  max-height: 765px;
-  max-width: 1366px;
-  margin: 0 auto;
-}
-
-img {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  -user-drag: none;
-  -webkit-touch-callout: none;
-  transform-origin: center;
-}
-
-#tile-button {
-  opacity: 0;
-  position: absolute;
-}
-
-#character-token {
-  opacity: 1;
-  position: absolute;
-  transition: 0.4s ease-out;
-  /*
-    left: 50%;
-    top: 50%;
-    -webkit-transform-origin: 50% 50%;
-    -moz-transform-origin: 50% 50%;
-    -ms-transform-origin: 50% 50%;
-    -o-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-    */
-  -webkit-animation-timing-function: ease;
-  -webkit-animation-iteration-count: 1;
-  -webkit-animation-duration: 3.5s;
-  animation-timing-function: ease;
-  animation-iteration-count: 1;
-  animation-duration: 3.5s;
-}
-
-#board-wrapper {
-  /*
-    display: block;
-  margin-left: auto;
-  margin-right: auto;
-  */
-  position: absolute;
-  display: block;
-  margin-left: 5%;
-  margin-top: 8em;
-  transform-origin: center;
-  -webkit-transform-origin: center;
-  transform: perspective(2040px) rotateX(35deg) rotateZ(0deg) translateZ(217px);
-  transition: 0.2s ease-in-out;
-  -webkit-animation-name: boardinit;
-  -webkit-animation-timing-function: ease;
-  -webkit-animation-iteration-count: 1;
-  -webkit-animation-duration: 3.5s;
-  animation-name: boardinit;
-  animation-timing-function: ease;
-  animation-iteration-count: 1;
-  animation-duration: 3.5s;
-}
-
-canvas#board {
-  /*  float: none; margin-top: 15%;*/
-  z-index: -1;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 20%;
-  transform-origin: center;
-}
-
 .add-keyframe {
   animation-name: rotate;
   animation-iteration-count: infinite;
@@ -187,9 +93,9 @@ canvas#board {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 8px;
-  width: 40px;
-  height: 40px;
+  margin-top: 4px;
+  width: 45px;
+  height: 45px;
 }
 .dice .back span {
   top: 26px;
@@ -296,5 +202,141 @@ canvas#board {
   100% { transform: rotateX(90deg) rotateY(360deg) rotateZ(0deg) translateX(0); }
 }
  */
+#card-container #card img {
+  position: absolute;
+}
+#card-container #card #content {
+  width: 90px;
+  margin-left: 5px;
+  margin-top: 26px;
+}
+#card-container #card #foreground {
+  width: 100px;
+  mask-image: url("../assets/ui/cards/adventurebgsmallpic_alpha.png");
+  -webkit-mask-image: url("../assets/ui/cards/adventurebgsmallpic_alpha.png");
+  mask-size: 100px 200px;
+  -webkit-mask-size: 100px 200px;
+}
+#card-container #card table {
+  position: absolute;
+  border: none;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 12px;
+  text-align: center;
+  border-collapse: collapse;
+}
+#card-container #card table td {
+  font-size: 10px;
+  margin-left: auto;
+  color: black;
+}
+#card-container #card table #card-name {
+  font-size: 10px;
+}
+#card-container #card table #card-category {
+  font-size: 5.5px;
+  padding-top: 71px;
+  color: white;
+}
+#card-container #card table #card-text {
+  font-size: 10px;
+  padding-top: 10px;
+  width: 100px;
+}
+
+html {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -html-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -user-drag: none;
+  -webkit-user-drag: none;
+}
+
+body {
+  padding: 10px;
+  background-color: #222;
+  width: 100%;
+  height: 100vh;
+  /*background: url("https://res.cloudinary.com/treborx555/image/upload/v1472724902/photo-1457903685934-249e8108a246_v8ugfn.jpg");*/
+  background-size: 100vw;
+  max-height: 765px;
+  max-width: 1366px;
+  margin: 0 auto;
+}
+
+img {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -user-drag: none;
+  -webkit-touch-callout: none;
+  transform-origin: center;
+}
+
+#tile-button {
+  opacity: 0;
+  position: absolute;
+}
+
+#character-token {
+  opacity: 1;
+  position: absolute;
+  transition: 0.4s ease-out;
+  /*
+    left: 50%;
+    top: 50%;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    */
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 3.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+  animation-duration: 3.5s;
+}
+
+#board-wrapper {
+  /*
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  */
+  position: absolute;
+  display: block;
+  margin-left: 5%;
+  margin-top: 8em;
+  transform-origin: center;
+  -webkit-transform-origin: center;
+  transform: perspective(2040px) rotateX(35deg) rotateZ(0deg) translateZ(217px);
+  transition: 0.2s ease-in-out;
+  -webkit-animation-name: boardinit;
+  -webkit-animation-timing-function: ease;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-duration: 3.5s;
+  animation-name: boardinit;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+  animation-duration: 3.5s;
+}
+
+canvas#board {
+  /*  float: none; margin-top: 15%;*/
+  z-index: -1;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20%;
+  transform-origin: center;
+}
 
 /*# sourceMappingURL=main.css.map */
