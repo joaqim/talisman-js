@@ -1,3 +1,4 @@
 // @depends ../+Creature/Creature.js
 
-const Wolf = () => new Creature("wolf", "Wolf", "creature", "Animal", 2, 0);
+const Wolf = () =>
+  new Enemy("wolf", "Wolf", "Enemy", "Animal", 2, { strength: 2 });

@@ -23,18 +23,20 @@ window.onload = function () {
     board.currentIndex = 0;
 
     let dice = new Dice();
-    dice.spinDice();
+    //dice.spinDice();
+    dice.castDice();
 
-    var game = new Game(game_cfg, this.asm);
-    //    var state = new StateMachine(game_cfg.state);
+    let w = Wolf();
+
+    //var game = new Game(game_cfg, this.asm);
     //game.testTurns();
 
-    var deck = new Deck(deck_cfg.adventure_deck);
-    deck.shuffle();
-    console.log(deck.draw(2));
+    //var deck = new Deck(deck_cfg.adventure_deck);
+    //deck.shuffle();
+    //console.log(deck.draw(2));
 
-    var wolf = document.getElementById("card-container");
-    board.moveToTileID(wolf, 49);
+    //var wolf = document.getElementById("card-container");
+    //board.moveToTileID(wolf, 49);
     //wolf.style.WebkitTransform = `rotateX(-35deg)`;
 
     return;

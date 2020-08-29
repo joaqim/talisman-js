@@ -1,4 +1,4 @@
-
+/*
 .add-keyframe {
    animation-name: rotate;
    animation-iteration-count: infinite;
@@ -6,6 +6,7 @@
    animation-timing-function: ease-in-out;
    animation-name: opacity;
 }
+*/
 .dice-container {
    width: 40vw;
    height: 150vh;
@@ -17,7 +18,7 @@
 .dice {
   //transition: .2s ease-in-out;
   //transition: .2s ease-in-out;
-  transition: 1.5s linear;
+  transition: 0.5s linear;
 
    width: 60px;
    height: 60px;
@@ -27,9 +28,10 @@
    margin-left: 10vw;
    transform-style: preserve-3d;
    transform: rotateX(0deg) rotateY(0deg) translateX(0);
+   transform-origin: center;
    animation-name: rotate;
    animation-iteration-count: infinite;
-   animation-duration: 3s;
+   animation-duration: 1s;
    animation-timing-function: ease-in-out;
 
    > div {

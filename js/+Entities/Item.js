@@ -1,5 +1,5 @@
 class Item extends Entity {
-  constructor(name, real_name, type, category, mods = [], args = []) {
-    super(name, real_name, type, category, mods, args);
+  constructor(name, real_name, type, sub_type, mods = [], args = []) {
+    super(name, real_name, type, sub_type, mods, args);
   }
 }

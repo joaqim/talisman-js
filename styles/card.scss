@@ -22,14 +22,14 @@
        border: none;
        margin-left: auto;
        margin-right: auto;
-       margin-top: 12px;
-       text-align: center;
+       margin-top: 13.5px;
        border-collapse: collapse;
+       text-align: center;
+       background-color: transparent;
 
        td {
          font-size: 10px;
          margin-left: auto;
-         color: rgb(0,0, 0)
        }
 
       #card-name {
@@ -38,7 +38,7 @@
 
        #card-category {
          font-size: 5.5px;
-         padding-top: 71px;
+         padding-top: 74px;
          color: rgb(255,255, 255)
        }
 
