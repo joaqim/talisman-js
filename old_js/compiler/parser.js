@@ -215,7 +215,7 @@ function parse(input) {
     scopes.push("global");
     while (!input.eof()) {
       code.push(parse_expression());
-      if (!input.eof()) skip_punc(";");
+      if (!input.eof()) parse_scope();
     }
     scopes.pop();
     return { type: "prog", names: "global", prog: code };

@@ -67,6 +67,7 @@ module.exports = function (grunt) {
         },
         src: [
           "node_modules/javascript-state-machine/dist/state-machine.js",
+          "node_modules/dice-js/dist/dice.js",
           "build/compiled_json.js",
           "js/+Entities/**.js",
           "js/modifiers/**.js",
