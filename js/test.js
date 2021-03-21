@@ -1,10 +1,7 @@
 //@depends ./+Board/Board.js
 //@depends ./AssetsManager.js
 //@depends ./+Game/Game.js
-
-//@depends ../node_modules/dice-js/dist/dice.js
-
-var Dice = require("dice-js");
+//@depends ./+Dice/Dice.js
 
 window.onload = function () {
   asm = new this.AssetsManager(assets_cfg);
@@ -27,6 +24,7 @@ window.onload = function () {
     board.currentIndex = 0;
 
     let dice = new Dice();
+
     //dice.castDice();
     //dice.spinDice(1);
     dice.playAnimation(dice.roll());

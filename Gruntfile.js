@@ -90,27 +90,27 @@ module.exports = function (grunt) {
     copy: {
       css_assets: {
         expand: true,
-        src: ["css/**", "assets/**"],
-        dest: "dist/",
-      },
-      scss_assets: {
-        expand: true,
         src: ["build/css/**"],
+        dest: "dist/css",
         flatten: true,
-        dest: "dist/css/",
       },
-      assets: {
+      build_assets: {
         expand: true,
         src: ["assets/**/**"],
         flatten: false,
-        dest: "build//",
+        dest: "build/",
       },
-
+      dist_assets: {
+        expand: true,
+        src: ["assets/**/**"],
+        flatten: false,
+        dest: "dist/",
+      },
       public: {
         expand: true,
         src: ["public/*"],
         flatten: true,
-        dest: "dist/",
+        dest: "dist/public/",
       },
     },
     processhtml: {
