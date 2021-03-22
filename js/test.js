@@ -24,6 +24,7 @@ window.onload = function () {
     board.currentIndex = 0;
 
     let dice = new Dice();
+    //let dice = new Dice();
 
     //dice.castDice();
     //dice.spinDice(1);
