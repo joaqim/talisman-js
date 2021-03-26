@@ -1,3 +1,4 @@
+//@depends ./Game.js
 Game.prototype.onInit = function () {
   console.log("init");
 

@@ -1,16 +1,19 @@
 //@depends ./PubSub.js
 //@depends ../node_modules/javascript-state-machine/dist/state-machine.js
-//@depensd ./AssetsManager.js
+//@depends ./AssetsManager.js
+//
+//@depends ./assets_cfg.js
+//@depends ./+Game/game_cfg.js
 
 class GameState extends StateMachine {
   turn = {
     mulligans: 0,
   };
 
-  players = [p];
-  player = p;
-  ctx = document.getElementById("canvas").getContext("2d");
-  am = new AssetsManager(cfg);
+  player = new Entity("Test", 1, 1, 1, 1);
+  //players = [p];
+  ctx = document.getElementById("board").getContext("2d");
+  am = new AssetsManager(assets_cfg);
 
   constructor(cfg) {
     super(cfg.state);
@@ -54,8 +57,8 @@ class GameState extends StateMachine {
   }
 
   testPlayer() {
-    this.startTurn();
-    this.player.update(this);
+    //this.startTurn();
+    //this.player.update(this);
     /*
     this.player.update(this);
     this.player.addEntity(Mule());
@@ -73,7 +76,7 @@ class GameState extends StateMachine {
     console.log(this.player.state.followers);
     console.log(this.player.state.carryLimit);
     */
-
+    /*
     this.player.addEntity(RuneSword());
     let req = this.player.canUse("rune_sword", "item");
     console.log(req.val, req.text);
@@ -82,10 +85,13 @@ class GameState extends StateMachine {
 
     this.player.addEntity(CrystalBall(this.player));
     this.player.drawCard({ game: this, deck: "adventure", amount: 1 });
+    */
   }
   testBattle() {
+    /*
     this.player.battleWon(Wolf());
     console.log(this.player.state.trophies);
+    */
   }
 
   drawSpell(entity, amount) {
@@ -124,8 +130,12 @@ var timer = setInterval(function () {
 }, 1000 / 3);
 */
 
-//window.onload = function () {
-//game = new GameState(cfg);
-//game = new Game();
-//game.start();
-//};
+window.onload = function () {
+  game = new GameState(game_cfg);
+  game.testTurns();
+  game.testPlayer();
+  game.testBattle();
+
+  //game = new Game();
+  //game.start();
+};

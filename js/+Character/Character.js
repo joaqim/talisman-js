@@ -1,4 +1,5 @@
 //@depends ../+Entities/Entity.js
+// Name, Health, Strength, Craft, Fate, Alignment, Start, Gold=2?, [items] , [followers]
 
 class Character extends Entity {
   constructor(
@@ -7,6 +8,8 @@ class Character extends Entity {
     strength,
     craft,
     fate,
+    alignment,
+    start,
     gold,
 
     //TODO: needs to be arrays to allow duplicate entries
@@ -14,7 +17,7 @@ class Character extends Entity {
     followers = new Map(),
     spells = new Map(),
 
-    trophys = new Array()
+    trophies = new Array()
   ) {
     super();
     this.state = {
@@ -23,13 +26,15 @@ class Character extends Entity {
       strength,
       craft,
       fate,
+      alignment,
+      start,
       gold,
       carryLimit: 4,
 
       items,
       followers,
       spells,
-      trophys, //misspelled on purpose to make it easier to convert state.type = "trophy"+s -> "trophys"
+      trophies,
     };
 
     // Gets applied on apply_changes state after
@@ -48,7 +53,7 @@ class Character extends Entity {
 
   get(index) {}
   add(entity) {
-    // item(s), trophy(s), follower(s), spell(s)
+    // item(s), trophies, follower(s), spell(s)
     let arr = this.state[`${entity.state.type}s`];
   }
   remove(entity) {}
@@ -124,7 +129,7 @@ class Character extends Entity {
         trophy.value.value + " " + trophy.value.type
       } .`
     );
-    this.state.trophys.push(trophy);
+    this.state.trophies.push(trophy);
   }
   // Items
   /*

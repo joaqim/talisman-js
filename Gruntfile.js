@@ -17,6 +17,7 @@ module.exports = function (grunt) {
         files: [
           "json/**/*.json",
           "js/**/*.js",
+          "js/*.js",
           "index.html",
           "css/**/*.css",
           "styles/**/*.scss",

@@ -1,3 +1,4 @@
+//@depends ./Game.js
 Game.prototype.testTurns = function () {
   console.log(this.allStates());
   console.log(this.transitions());

@@ -2,7 +2,7 @@
   "name": "talisman-js",
   "version": "1.0.0",
   "description": "",
-  "main": "js/index.js",
+  "main": "js/Game.js",
   "scripts": {
     "build": "grunt build",
     "dist": "grunt dist",

@@ -1,4 +1,16 @@
 //@depends ../Character.js
+//TODO: Use nested/recursive events with true/false callbacks
+// and pass gamestate/relevant data for modification where needed
+// scratch:
+
+function condition_alignment(expr, entity, target) {}
+
+// Picking up/using an item?
+function pickup_item(item, entity) {
+  // Using callback to nest conditions ... ?
+  condition_alignment(function () {}, target, item);
+}
+// end of scratch
 
 function add_mod(entity, func_name, callback, replace = false) {
   let Fn = entity[func_name].bind(entity);
@@ -17,8 +29,10 @@ function add_mod2(entity, mod) {
 }
 
 // TODO: Make sure all conditionals are accounted for, maybe do an array instead of callbacks?
+// Add priority and an optional option to break out of a condition if it fails
 function add_mod2_cond(entity, mod) {
   let Fn = entity[mod.when].bind(entity);
+  // mod.when is onUpdate, onDrawCard, etc ...
   entity[mod.when] = (target) => {
     let val = mod.callback(target);
     if (!Fn)
@@ -31,7 +45,7 @@ function add_mod2_cond(entity, mod) {
   };
 }
 
-function always_x_of_spells(entity, args) {
+function always_x_of_spells(entity, args = { amount: 1 }) {
   add_mod2(entity, {
     when: "onUpdate",
     callback: (game) => {
@@ -42,15 +56,37 @@ function always_x_of_spells(entity, args) {
   });
 }
 
+function start_with_x_spells(entity, args = { amount: 1 }) {
+  add_mod2(entity, {
+    when: "onInitialTurn",
+    callback: (game) => {
+      if (entity.spellCount() < args.amount) {
+        game.drawSpell(entity, args.amount - entity.spellCount());
+      }
+    },
+  });
+}
+
+function may_attack_with_psychic(entity, args = {}) {
+  add_mod2(entity, {
+    when: "onCombatChoice",
+    callback: (game) => {
+      // if args.target matches some condition?
+      // or if args.cond ( is a function ) && args.cond(game, entity, target) == true
+      //game.combat.attackChoices["psychic"] = true;
+    },
+  });
+}
+
 // max signifies the amount of cards you can mulligan per draw
 // not used until I up the draw for drawMulligan($1)
 function may_mulligan_cards(entity, args_m) {
   if (entity.type == undefined) {
     add_mod2(entity, {
       when: "onDrawCard",
-      callback: (args) => {
-        console.log(args.deck);
-        if (args.deck == args_m.deck) {
+      callback: (game, args) => {
+        console.log(args.deckName);
+        if (args.deckName == args_m.deckName) {
           // Math.Max is used to make sure that mulligans don't stack; only keep the highest
           // amount of mulligans
           // Math.Min makes sure that you don't have more mulligans than cards drawn
@@ -75,6 +111,7 @@ function may_mulligan_cards(entity, args_m) {
   }
 }
 
+//TODO: Don't have data be dependant on html table, duh
 function change_inventory_size(entity, change = 4) {
   var table = document
     .getElementById("inventory")
@@ -188,28 +225,31 @@ const required_alignment_to_use_NOT = (entity, alignment) =>
 }
 
 function weapon_lifesteal(entity, amount = 1) {
-
   // If battle won with entity(weapon) equipped
   // and the owner choose to take life
   // or the target was a creature
   //
   add_mod2(entity, "onBattleWon", (owner, target) => {
-      if(target.type == "creature") {
-        console.log(`${entity.state.real_name} was used to steal ${amount} life from ${target.state.real_name}`)
-        owner.changes.lives = +1;
-      } else if (target.changes == -1) {
-        console.log(`${entity.state.real_name} was used to steal ${amount} life from ${target.state.name}`)
-        owner.changes.lives = +1;
-      }
+    if (target.type == "creature") {
+      console.log(
+        `${entity.state.real_name} was used to steal ${amount} life from ${target.state.real_name}`
+      );
+      owner.changes.lives = +1;
+    } else if (target.changes == -1) {
+      console.log(
+        `${entity.state.real_name} was used to steal ${amount} life from ${target.state.name}`
+      );
+      owner.changes.lives = +1;
+    }
   });
 }
-  /*
+/*
   let eqFn = entity.equipped.bind(entity);
   entity.equipped = (owner) => {
     return eqFn(owner);
   };
   */
-  /*
+/*
   let btlSucFn = entity.onBattleSuccess.bind(entity);
   entity.onBattleSuccess = (owner, target) => {
     btlSucFn(owner, target);
