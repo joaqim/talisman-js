@@ -4,7 +4,11 @@
   "description": "",
   "main": "js/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "grunt build",
+    "dist": "grunt dist",
+    "github": "grunt github",
+    "publish": "github"
   },
   "author": "",
   "license": "MIT",
